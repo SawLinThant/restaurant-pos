@@ -66,6 +66,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    orders        Order[]
 }
 
 model VerificationToken {
@@ -74,4 +75,42 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Order {
+    id          String      @id @default(cuid())
+    tableNumber Int
+    waiterId    String      
+    waiter      User        @relation(fields: [waiterId], references: [id])
+    orderStatus String     
+    orderDate   DateTime    @default(now())
+
+    items       OrderItem[] 
+    sale        Sale?       
+}
+
+model OrderItem {
+    id          String      @id @default(cuid())
+    orderId     String
+    order       Order       @relation(fields: [orderId], references: [id])
+    menuItemId  String
+    menuItem    MenuItem    @relation(fields: [menuItemId], references: [id])
+    quantity    Int
+}
+
+model MenuItem {
+    id          String      @id @default(cuid())
+    name        String
+    description String?
+    price       Float
+
+    orderItems  OrderItem[] 
+}
+
+model Sale {
+    id          String      @id @default(cuid())
+    orderId     String @unique
+    order       Order       @relation(fields: [orderId], references: [id])
+    saleDate    DateTime    @default(now())
+    totalAmount Float
 }
