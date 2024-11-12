@@ -7,11 +7,18 @@ export default {
   ],
   theme: {
   	extend: {
+		boxShadow:{
+			AppBarShadow:'0px 4px 4px 0px #1E1E1E40',
+			OrderCardShadow:'0px 1px 50px 3px #1E1E1E0D'
+		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
+		backgroundColor:{
+			primary:'#fafbfb'
+		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
