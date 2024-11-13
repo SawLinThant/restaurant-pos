@@ -137,3 +137,55 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .custom-scrollbar {
+    &::-webkit-scrollbar {
+      width: 5px;
+      height: 10px;
+      background-color: #f5f0f0;
+      /* padding: 10px; */
+      border-radius: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 8px;
+      background: #FFFFFF;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #c9c7c7;
+      border-radius: 8px;
+      width: 10px;
+      border: 3px solid #c9c7c7;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: #f5f0f0;
+      border-radius: 8px;
+      border: 3px solid #ffffff;
+    }
+  }
+
+  .custom-scrollbar-sidebar {
+    &::-webkit-scrollbar {
+      width: 7px;
+      height: 21px;
+      background-color: #FFFFFF;
+      /* padding: 10px; */
+      border-radius: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 8px;
+      background: #FFFFFF;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #ffffff;
+      border-radius: 8px;
+      border: 3px solid #ffffff;
+      height: 48px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: #ffffff;
+      border-radius: 8px;
+      border: 3px solid #ffffff;
+    }
+  }
+}

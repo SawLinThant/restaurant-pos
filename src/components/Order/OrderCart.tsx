@@ -14,7 +14,7 @@ const OrderCart = () => {
       <span className="text-[18px] font-[500] leading-[21px] mb-[30px]">
         Order Details
       </span>
-      <div className="flex w-full flex-col overflow-y-auto">
+      <div className="flex w-full flex-col hover:overflow-y-auto overflow-y-hidden custom-scrollbar">
         <div className="flex w-full flex-col  ">
           <OrderCartDetail />
           <OrderCartDetail />

@@ -14,7 +14,7 @@ const DishCard = () => {
         </div>
         <div className=" w-1/2 flex-col ">
           <span className="text-[18px] font-[500]">Salad</span>
-          <div className="text-[11px] font-[500] text-[#00000080] h-[45%] overflow-y-auto  leading-[15px]">
+          <div className="text-[11px] font-[500] text-[#00000080] h-[45%] hover:overflow-y-auto overflow-y-hidden custom-scrollbar leading-[15px]">
             Lorem ipsum dolor sit amet consectetur. Orci ac et ornare sit et
             tellus lorem vulputate malesuada. Lorem ipsum dolor sit amet
             consectetur. Orci ac et ornare sit et tellus lorem vulputate
