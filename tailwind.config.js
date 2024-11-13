@@ -9,7 +9,8 @@ export default {
   	extend: {
 		boxShadow:{
 			AppBarShadow:'0px 4px 4px 0px #1E1E1E40',
-			OrderCardShadow:'0px 1px 50px 3px #1E1E1E0D'
+			OrderCardShadow:'0px 1px 50px 3px #1E1E1E0D',
+			OrderCartShadow:'0px 0px 9.6px 0px #0000001A'
 		},
   		borderRadius: {
   			lg: 'var(--radius)',
