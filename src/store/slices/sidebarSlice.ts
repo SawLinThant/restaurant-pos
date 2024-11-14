@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 export interface SidebarMenuProps {
   id: string;
@@ -50,5 +51,8 @@ export const sideBarSlice = createSlice({
 });
 
 export const { setIsSelected, toggle } = sideBarSlice.actions;
+export const selectSideBarIsCollpase = (state: RootState) =>
+  state.sidebar.isCollpase;
+export const selectSideBarMenu = (state: RootState) => state.sidebar.options;
 
 export default sideBarSlice.reducer;
