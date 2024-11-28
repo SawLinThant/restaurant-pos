@@ -7,13 +7,17 @@ import {
   Routes,
 } from "react-router-dom";
 import Home from "./pages/Home";
+import Login from "./pages/login";
+import Register from "./pages/register";
 
 function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/*" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/*" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="*" element={<Navigate to={"/"} replace />} />
         </Routes>
       </Router>
