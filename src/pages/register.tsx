@@ -1,10 +1,9 @@
 import RegisterForm from "@/components/account/register";
 
 const Register = () => {
-  return (
-   <div>
+  return <div>
     <RegisterForm/>
-   </div>
-  );
+  </div>;
 };
+
 export default Register;
