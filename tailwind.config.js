@@ -18,7 +18,8 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
 		backgroundColor:{
-			primary:'#fafbfb'
+			primary:'#fafbfb',
+			secondary: '#009258'
 		},
   		colors: {
   			background: 'hsl(var(--background))',
