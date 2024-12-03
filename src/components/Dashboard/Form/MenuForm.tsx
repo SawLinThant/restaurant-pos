@@ -3,10 +3,12 @@ import ImageUpload from "@/components/common/image-upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MenuForm = () => {
   const [image,setImage] = useState<any>(null);
   const [imageUrl,setImageUrl] = useState<string>("");
+  const navigate = useNavigate();
   const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     if(e.target.files && e.target.files[0]){
       setImage(e.target.files[0]);
@@ -45,7 +47,7 @@ const MenuForm = () => {
                 </div>
               </div>
               <div className="flex flex-row gap-3 w-full justify-center mt-4">
-                <Button className="text-black bg-white border min-w-[7rem] border-gray-600 hover:border-green-600">
+                <Button onClick={() => navigate("/dashboard/menu")} className="text-black bg-white border min-w-[7rem] border-gray-600 hover:border-green-600">
                   Cancel
                 </Button>
                 <Button className="bg-secondary text-white min-w-[7rem] hover:text-black hover:border-green-600">

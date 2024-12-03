@@ -1,4 +1,4 @@
-import MenuForm from "@/components/Dashboard/Form/MenuForm";
+import { MenuForm, StaffForm } from "@/components/Dashboard/Form";
 import { Menu, OrderList, Overview, Staff } from "@/components/Dashboard/MainContent";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import { Route, Routes } from "react-router-dom";
@@ -14,6 +14,7 @@ const MainScreen = () => {
                 <Route path="staff" element={<Staff/>}/>
                 <Route path="menu" element={<Menu/>}/>
                 <Route path="menu/createmenu" element={<MenuForm/>}/>
+                <Route path="staff/createstaff" element={<StaffForm/>}/>
                 <Route path="orderlist" element={<OrderList/>}/>
             </Routes>
         </div>
