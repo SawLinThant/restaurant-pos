@@ -13,13 +13,13 @@ const LoginForm : React.FC = () => {
           <div className="w-3/4 h-3/4">
             <form action="" className="w-full h-full flex flex-col gap-2">
               <div className="w-full h-full flex flex-col gap-4">
-                <Input type="text" placeholder="Enter User Name"/>
-                <Input type="password" placeholder="Enter Password" />
+                <Input className="h-[2.75rem]" type="text" placeholder="Enter User Name"/>
+                <Input className="h-[2.75rem]" type="password" placeholder="Enter Password" />
               </div>
               <div
               onClick={() => navigate('/register')}
-              className="w-full text-center text-sm underline hover:cursor-pointer text-muted-foreground">Does not have an account?</div>
-              <Button className="w-full p-4 mt-4 text-white bg-secondary hover:text-black">Login</Button>
+              className="w-full text-center text-xs underline hover:cursor-pointer text-muted-foreground">Does not have an account?</div>
+              <Button className="w-full h-[2.75rem] p-4 mt-4 text-white hover:text-black bg-secondary hover:border-green-600">Login</Button>
             </form>
           </div>
         </div>
