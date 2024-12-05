@@ -2,6 +2,7 @@ import ComboBox from "@/components/common/custom-dropdown";
 import ImageUpload from "@/components/common/image-upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Roles } from "@/lib/constants/MenuOptions";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +10,7 @@ const MenuForm = () => {
   const [image,setImage] = useState<any>(null);
   const [imageUrl,setImageUrl] = useState<string>("");
   const navigate = useNavigate();
+  const [optionValue,setOptionValue] = useState<string>("")
   const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     if(e.target.files && e.target.files[0]){
       setImage(e.target.files[0]);
@@ -37,7 +39,7 @@ const MenuForm = () => {
                   </div>
                   <div className="w-full flex flex-col gap-2 items-start justify-start">
                     <label htmlFor="">Category</label>
-                    <ComboBox />
+                    <ComboBox options={Roles} label="role" setOptionValue={setOptionValue}/>
                   </div>
                 </div>
                 <div className="w-full flex flex-col pl-6">
