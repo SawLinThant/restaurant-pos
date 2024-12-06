@@ -7,12 +7,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 interface CustomJwtPayload {
-  id: string;
-  email: string;
-  iat: number;
-  exp: number;
+  id: string
+  email: string
+  iat: number
+  exp: number
+  role: string
 }
-export function getRoleFromToken(token: string): CustomJwtPayload | null {
+export function decodeToken(token: string): CustomJwtPayload | null {
   try {
     const decodedToken = jwtDecode<CustomJwtPayload>(token);
     return decodedToken;
@@ -21,3 +22,8 @@ export function getRoleFromToken(token: string): CustomJwtPayload | null {
     return null;
   }
 }
+
+// const baseUrl = import.meta.env.VITE_BASE_URL;
+// export function UploadImage() {
+
+// }

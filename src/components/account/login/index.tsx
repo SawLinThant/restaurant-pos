@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getRoleFromToken } from "@/lib/utils";
+import { decodeToken } from "@/lib/utils";
 import axios from "axios";
 import { Loader } from "lucide-react";
 import React, { useState } from "react";
@@ -13,26 +13,31 @@ const LoginForm : React.FC = () => {
   const navigate = useNavigate();
   const {handleSubmit:loginSubmit, register:loginRegister} = useForm();
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
+  const baseUrl = import.meta.env.VITE_BASE_URL;
   const handleLogin = loginSubmit(async(data) => {
-      // try{
-      //   setLoginLoading(true);
-      //   const payload = {
-      //     email: data.email,
-      //     password: data.password
-      //   }
-      //   const response = await axios.post("http://localhost:3000/auth/register", payload)
-      //   if(response.status === 200){
-      //     const token = response.data.token;
-          
-      //   }
-      // }catch(error){
-      //   toast.error("Failed to login")
-      //   throw new Error("Errow loging in");
-      // }finally{
-      //   setLoginLoading(false)
-      // }
-      const role = getRoleFromToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNGJsenVsODAwMDBlZmZhZWs1dXVuNmYiLCJlbWFpbCI6ImxpbnRoYW50c2F3NjcwQGdtYWlsLmNvbSIsImlhdCI6MTczMzQyMzM0NSwiZXhwIjoxNzMzNDI2OTQ1fQ.A-dE5M5N9DrbGngGLjmHtHr1tGdgHflt0qAAMGLtiHw");
-      console.log("decoded token",role?role.email:"")
+      try{
+        setLoginLoading(true);
+        const payload = {
+          email: data.email,
+          password: data.password
+        }
+        const response = await axios.post(`${baseUrl}/auth/register`, payload)
+        if(response.status === 200){
+          const token = response.data.token;
+          const decodedToken = decodeToken(token);
+          const role = decodedToken?.role 
+          if(role === "WAITER"){
+            navigate('/home')
+          }else{
+            navigate('/dashboard')
+          } 
+        }
+      }catch(error){
+        toast.error("Failed to login")
+        throw new Error("Errow loging in");
+      }finally{
+        setLoginLoading(false)
+      }
   })
 
   return (
