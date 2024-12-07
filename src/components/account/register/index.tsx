@@ -14,8 +14,13 @@ const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState<string>("");
   const [registerLoading, setRegsiterLoading] = useState<boolean>(false);
-  const { handleSubmit: createSubmit, register: createRegister } = useForm();
+  const { handleSubmit: createSubmit, register: createRegister,reset:resetForm } = useForm();
   const baseUrl = import.meta.env.VITE_BASE_URL; 
+
+  const reset = () => {
+    resetForm();
+    setRole("");
+  }
  
   const handleRegister = createSubmit(async (data) => {
     if (data.password !== data.confirm_password) {
@@ -32,8 +37,12 @@ const RegisterForm: React.FC = () => {
         role: role,
       };
       const response = await axios.post(`${baseUrl}/auth/register`,payload)
-      console.log("Account created successfully:", response.data);
-      toast.success("Account created successfully")
+      if(response.status === 200){
+        reset();
+        console.log("Account created successfully:", response.data);
+        toast.success("Account created successfully")
+      }
+      
     } catch (error) {
       toast.error("Failed to create account");
       console.log("Error creating account", error);

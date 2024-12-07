@@ -9,7 +9,7 @@ const Home = () => {
       <AppBar/>
       <Routes>
             <Route path="order/*" element={<Order/>}/>
-            <Route path="*" element={<Navigate to={"order/*"} replace/>}/>
+            {/* <Route path="*" element={<Navigate to={"order/*"} replace/>}/> */}
       </Routes>
     </div>
   )
