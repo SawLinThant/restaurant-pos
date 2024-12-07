@@ -18,10 +18,10 @@ const LoginForm : React.FC = () => {
       try{
         setLoginLoading(true);
         const payload = {
-          email: data.email,
+          phone: data.phone,
           password: data.password
         }
-        const response = await axios.post(`${baseUrl}/auth/register`, payload)
+        const response = await axios.post(`${baseUrl}/auth/login`, payload)
         if(response.status === 200){
           const token = response.data.token;
           const decodedToken = decodeToken(token);
@@ -50,11 +50,11 @@ const LoginForm : React.FC = () => {
             <form onSubmit={handleLogin} action="" className="w-full h-full flex flex-col gap-2">
               <div className="w-full h-full flex flex-col gap-4">
                 <Input
-                typeof="email"
-                {...loginRegister("email",{
-                  required:"Email is required"
+                typeof="phone"
+                {...loginRegister("phone",{
+                  required:"Phone is required"
                 })}
-                className="h-[2.75rem]" type="text" placeholder="Enter Email"/>
+                className="h-[2.75rem]" type="text" placeholder="Enter Phone number"/>
                 <Input
                 typeof="text"
                 {...loginRegister("password",{
@@ -65,7 +65,7 @@ const LoginForm : React.FC = () => {
               <div
               onClick={() => navigate('/register')}
               className="w-full text-center text-xs underline hover:cursor-pointer text-muted-foreground">Does not have an account?</div>
-              <Button disabled={loginLoading} className="w-full h-[2.75rem] flex items-center justify-center p-4 mt-4 text-white hover:text-black bg-secondary hover:border-green-600">{loginLoading?<Loader/>:"Login"}</Button>
+              <Button disabled={loginLoading} className="w-full h-[2.75rem] flex items-center justify-center p-4 mt-4 text-white hover:text-black bg-secondary hover:border-green-600">{loginLoading?<Loader className="animate-spin"/>:"Login"}</Button>
             </form>
           </div>
         </div>

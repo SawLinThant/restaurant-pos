@@ -24,6 +24,7 @@ const RegisterForm: React.FC = () => {
       setRegsiterLoading(true);
       const payload = {
         name: data.name,
+        phone: data.phone,
         email: data.email,
         password: data.password,
         role: role,
@@ -61,6 +62,14 @@ const RegisterForm: React.FC = () => {
                   placeholder="Enter User Name"
                 />
                 <Input
+                  {...createRegister("phone", {
+                    required: "Email is required",
+                  })}
+                  className="h-[2.75rem]"
+                  type="text"
+                  placeholder="Enter phone number"
+                />
+                 <Input
                   {...createRegister("email", {
                     required: "Email is required",
                   })}
@@ -100,7 +109,7 @@ const RegisterForm: React.FC = () => {
                 disabled={registerLoading}
                 className="w-full h-[2.75rem] flex items-center justify-center p-4 mt-4 text-white bg-secondary hover:text-black hover:border-green-600"
               >
-                {registerLoading ? <Loader /> : "Register"}
+                {registerLoading ? <Loader className="animate-spin"/> : "Register"}
               </Button>
             </form>
           </div>

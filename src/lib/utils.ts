@@ -9,6 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 interface CustomJwtPayload {
   id: string
   email: string
+  phone: string
   iat: number
   exp: number
   role: string
