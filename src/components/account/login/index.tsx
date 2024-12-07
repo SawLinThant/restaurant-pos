@@ -24,6 +24,7 @@ const LoginForm : React.FC = () => {
         const response = await axios.post(`${baseUrl}/auth/login`, payload)
         if(response.status === 200){
           const token = response.data.data.token;
+          localStorage.setItem("token",token);
           const decodedToken = decodeToken(token);
           const role = decodedToken?.role 
           if(role === "WAITER"){

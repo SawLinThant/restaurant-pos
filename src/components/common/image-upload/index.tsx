@@ -15,7 +15,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const handleClick = () => {
     if (inputRef.current) inputRef.current.click();
   };
-  console.log(imageUrl)
   return (
     <div className="w-full">
       <div

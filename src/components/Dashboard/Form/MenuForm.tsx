@@ -3,7 +3,7 @@ import ImageUpload from "@/components/common/image-upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Roles } from "@/lib/constants/MenuOptions";
+import { Category } from "@/lib/constants/MenuOptions";
 import axios from "axios";
 import { Loader } from "lucide-react";
 import { useState } from "react";
@@ -24,7 +24,6 @@ const MenuForm = () => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
       setImageUrl(URL.createObjectURL(e.target.files[0]));
-      console.log(imageUrl);
     }
   };
   const handleCreateMenu = createMenuSubmit(async (data) => {
@@ -32,26 +31,43 @@ const MenuForm = () => {
       setCreateLoading(true);
 
       const formData = new FormData();
-      formData.append("file",image)
-      const uploadResponse = await axios.post(`${baseUrl}/product/upload`,formData,{
-        headers:{
-          "Content-Type": "multipart/form-data"
+      formData.append("file", image);
+      const token = localStorage.getItem("token");
+      const uploadResponse = await axios.post(
+        `${baseUrl}/product/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
-      const uploadedImageUrl = uploadResponse.data?.url || "";
-      if(!uploadedImageUrl){
-        throw new Error("Error uploading image")
-      }
-
-      const payload = {
-        name: data.name,
-        price: data.price,
-        category: category,
-        image_url: uploadedImageUrl,
-      };
-      const response = await axios.post(`${baseUrl}/Product/create`, payload);
-      if (response.status === 200) {
-        toast.success("Staff created");
+      );
+      const uploadedImageUrl = uploadResponse.data?.data?.url || "";
+      console.log(uploadedImageUrl);
+      if (!uploadedImageUrl) {
+        throw new Error("Error uploading image");
+      } else {
+        console.log("else block")
+        const payload = {
+          name: data.name,
+          price: parseInt(data.price),
+          category: category,
+          image_url: uploadedImageUrl,
+          description: data.description
+        };
+        const response = await axios.post(
+          `${baseUrl}/Product/create`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 201) {
+          toast.success("Product created");
+        }
       }
     } catch (error) {
     } finally {
@@ -60,7 +76,7 @@ const MenuForm = () => {
   });
   return (
     <div className="w-full h-full flex items-start justify-center">
-      <ToastContainer position="top-center" autoClose={3000}/>
+      <ToastContainer position="top-center" autoClose={3000} />
       <div className="w-[50vw] min-h-[40vh] p-8 mt-10 border-2 rounded-[40px]">
         <div className="w-full h-full flex flex-col gap-8">
           <div>
@@ -97,14 +113,14 @@ const MenuForm = () => {
                   <div className="w-full flex flex-col gap-2 items-start justify-start">
                     <label htmlFor="">Category</label>
                     <ComboBox
-                      options={Roles}
+                      options={Category}
                       label="role"
                       setOptionValue={setCategory}
                     />
                   </div>
                 </div>
                 <div className="w-full flex flex-col pl-6 gap-4">
-                <div className="w-full flex flex-col gap-2 items-start justify-start">
+                  <div className="w-full flex flex-col gap-2 items-start justify-start">
                     <label htmlFor="">Description</label>
                     <Textarea
                       {...menuRegister("description", {
@@ -130,7 +146,11 @@ const MenuForm = () => {
                   Cancel
                 </Button>
                 <Button className="bg-secondary text-white min-w-[7rem] flex items-center justify-center hover:text-black hover:border-green-600">
-                  {createLoading ? <Loader /> : "Create"}
+                  {createLoading ? (
+                    <Loader className="animate-spin" />
+                  ) : (
+                    "Create"
+                  )}
                 </Button>
               </div>
             </form>
