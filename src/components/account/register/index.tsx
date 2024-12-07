@@ -15,6 +15,8 @@ const RegisterForm: React.FC = () => {
   const [role, setRole] = useState<string>("");
   const [registerLoading, setRegsiterLoading] = useState<boolean>(false);
   const { handleSubmit: createSubmit, register: createRegister } = useForm();
+  const baseUrl = import.meta.env.VITE_BASE_URL; 
+ 
   const handleRegister = createSubmit(async (data) => {
     if (data.password !== data.confirm_password) {
       toast.error("Password do not match");
@@ -29,7 +31,7 @@ const RegisterForm: React.FC = () => {
         password: data.password,
         role: role,
       };
-      const response = await axios.post("http://localhost:3000/auth/register",payload)
+      const response = await axios.post(`${baseUrl}/auth/register`,payload)
       console.log("Account created successfully:", response.data);
       toast.success("Account created successfully")
     } catch (error) {
