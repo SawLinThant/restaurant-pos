@@ -145,7 +145,7 @@ const MenuForm = () => {
                 >
                   Cancel
                 </Button>
-                <Button className="bg-secondary text-white min-w-[7rem] flex items-center justify-center hover:text-black hover:border-green-600">
+                <Button disabled={createLoading} className="bg-secondary text-white min-w-[7rem] flex items-center justify-center hover:text-black hover:border-green-600">
                   {createLoading ? (
                     <Loader className="animate-spin" />
                   ) : (

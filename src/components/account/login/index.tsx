@@ -28,7 +28,7 @@ const LoginForm : React.FC = () => {
           const decodedToken = decodeToken(token);
           const role = decodedToken?.role 
           if(role === "WAITER"){
-            navigate('/home')
+            navigate('/home/order')
           }else{
             navigate('/dashboard')
           } 

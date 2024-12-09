@@ -1,5 +1,11 @@
 import DotIcon from "../icons/dot";
 
+// interface DishCardProps {
+//   name: string
+//   description: string
+//   image_url: string
+// }
+
 const DishCard = () => {
   return (
     <div className="flex w-full sm:w-[330px] flex-shrink flex-col bg-[#F6F6F6] rounded-[10px]  pt-[25px] pl-[25px] pr-[15px] pb-[15px]">
