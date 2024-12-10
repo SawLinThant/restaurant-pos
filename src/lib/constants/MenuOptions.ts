@@ -13,9 +13,6 @@ export const Roles = [
       value: "CHIEF",
       label: "Chief",
     },
-<<<<<<< HEAD
-  ]
-=======
 ]
 
 export const Category = [
@@ -32,4 +29,3 @@ export const Category = [
     label: "Burmese Food",
   },
 ]
->>>>>>> feature/dashboard

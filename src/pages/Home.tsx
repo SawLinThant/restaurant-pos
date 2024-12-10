@@ -9,10 +9,6 @@ const Home = () => {
       <AppBar/>
       <Routes>
             <Route path="order/*" element={<Order/>}/>
-<<<<<<< HEAD
-            {/* <Route path="*" element={<Navigate to={"order/*"} replace/>}/> */}
-=======
->>>>>>> feature/dashboard
       </Routes>
     </div>
   )

@@ -13,10 +13,7 @@ const CustomTable  = ({column,tableData}:TableProps) => {
         getCoreRowModel: getCoreRowModel(),
         data: tableData
     })
-<<<<<<< HEAD
-=======
     console.log(tableData)
->>>>>>> feature/dashboard
     return(
         <div className="w-full flex flex-col">
             <table className="w-full border">

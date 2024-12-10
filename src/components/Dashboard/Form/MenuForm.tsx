@@ -3,11 +3,7 @@ import ImageUpload from "@/components/common/image-upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-<<<<<<< HEAD
-import { Roles } from "@/lib/constants/MenuOptions";
-=======
 import { Category } from "@/lib/constants/MenuOptions";
->>>>>>> feature/dashboard
 import axios from "axios";
 import { Loader } from "lucide-react";
 import { useState } from "react";
@@ -28,10 +24,6 @@ const MenuForm = () => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
       setImageUrl(URL.createObjectURL(e.target.files[0]));
-<<<<<<< HEAD
-      console.log(imageUrl);
-=======
->>>>>>> feature/dashboard
     }
   };
   const handleCreateMenu = createMenuSubmit(async (data) => {
@@ -39,28 +31,6 @@ const MenuForm = () => {
       setCreateLoading(true);
 
       const formData = new FormData();
-<<<<<<< HEAD
-      formData.append("file",image)
-      const uploadResponse = await axios.post(`${baseUrl}/product/upload`,formData,{
-        headers:{
-          "Content-Type": "multipart/form-data"
-        }
-      })
-      const uploadedImageUrl = uploadResponse.data?.url || "";
-      if(!uploadedImageUrl){
-        throw new Error("Error uploading image")
-      }
-
-      const payload = {
-        name: data.name,
-        price: data.price,
-        category: category,
-        image_url: uploadedImageUrl,
-      };
-      const response = await axios.post(`${baseUrl}/Product/create`, payload);
-      if (response.status === 200) {
-        toast.success("Staff created");
-=======
       formData.append("file", image);
       const token = localStorage.getItem("token");
       const uploadResponse = await axios.post(
@@ -98,7 +68,6 @@ const MenuForm = () => {
         if (response.status === 201) {
           toast.success("Product created");
         }
->>>>>>> feature/dashboard
       }
     } catch (error) {
     } finally {
@@ -107,11 +76,7 @@ const MenuForm = () => {
   });
   return (
     <div className="w-full h-full flex items-start justify-center">
-<<<<<<< HEAD
-      <ToastContainer position="top-center" autoClose={3000}/>
-=======
       <ToastContainer position="top-center" autoClose={3000} />
->>>>>>> feature/dashboard
       <div className="w-[50vw] min-h-[40vh] p-8 mt-10 border-2 rounded-[40px]">
         <div className="w-full h-full flex flex-col gap-8">
           <div>
@@ -148,22 +113,14 @@ const MenuForm = () => {
                   <div className="w-full flex flex-col gap-2 items-start justify-start">
                     <label htmlFor="">Category</label>
                     <ComboBox
-<<<<<<< HEAD
-                      options={Roles}
-=======
                       options={Category}
->>>>>>> feature/dashboard
                       label="role"
                       setOptionValue={setCategory}
                     />
                   </div>
                 </div>
                 <div className="w-full flex flex-col pl-6 gap-4">
-<<<<<<< HEAD
-                <div className="w-full flex flex-col gap-2 items-start justify-start">
-=======
                   <div className="w-full flex flex-col gap-2 items-start justify-start">
->>>>>>> feature/dashboard
                     <label htmlFor="">Description</label>
                     <Textarea
                       {...menuRegister("description", {
@@ -188,17 +145,12 @@ const MenuForm = () => {
                 >
                   Cancel
                 </Button>
-<<<<<<< HEAD
-                <Button className="bg-secondary text-white min-w-[7rem] flex items-center justify-center hover:text-black hover:border-green-600">
-                  {createLoading ? <Loader /> : "Create"}
-=======
                 <Button disabled={createLoading} className="bg-secondary text-white min-w-[7rem] flex items-center justify-center hover:text-black hover:border-green-600">
                   {createLoading ? (
                     <Loader className="animate-spin" />
                   ) : (
                     "Create"
                   )}
->>>>>>> feature/dashboard
                 </Button>
               </div>
             </form>

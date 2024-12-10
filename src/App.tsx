@@ -19,10 +19,7 @@ function App() {
           <Route path="/dashboard/*" element={<MainScreen />} />
           <Route path="*" element={<Login />} />
           <Route path="/register" element={<Register />} />
-<<<<<<< HEAD
           {/* <Route path="*" element={<Navigate to={"/"} replace />} /> */}
-=======
->>>>>>> feature/dashboard
         </Routes>
       </Router>
     </>
