@@ -1,5 +1,9 @@
 import CustomTable from "@/components/common/customtable";
+<<<<<<< HEAD
 import { ORDER_COLUMN } from "@/components/common/customtable/columns";
+=======
+import { STAFF_COLUMN } from "@/components/common/customtable/columns";
+>>>>>>> feature/dashboard
 import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 
@@ -38,6 +42,10 @@ const dummyData = [
 
 const Staff = () => {
   const navigate = useNavigate();
+<<<<<<< HEAD
+=======
+  
+>>>>>>> feature/dashboard
   return (
     <div className="w-full h-full flex flex-col gap-4">
       <div className="w-full flex items-center justify-start">
@@ -66,7 +74,11 @@ const Staff = () => {
         </div>
       </div>
       <div className="w-full mt-4">
+<<<<<<< HEAD
         <CustomTable column={ORDER_COLUMN()} tableData={dummyData} />
+=======
+        <CustomTable column={STAFF_COLUMN()} tableData={dummyData} />
+>>>>>>> feature/dashboard
       </div>
     </div>
   );

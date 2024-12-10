@@ -1,43 +1,59 @@
 import CustomTable from "@/components/common/customtable";
-import { ORDER_COLUMN } from "@/components/common/customtable/columns";
+import { MENU_COLUMN } from "@/components/common/customtable/columns";
+import Pagination from "@/components/common/pagination";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-const dummyData = [
-    {
-        id: "1",
-        name: "Order-1",
-        created_at: "29/11/2024",
-        price: 30000
-    },
-    {
-        id: "2",
-        name: "Order-2",
-        created_at: "29/11/2024",
-        price: 24000
-    },
-    {
-        id: "3",
-        name: "Order-3",
-        created_at: "29/11/2024",
-        price: 60000
-    },
-    {
-        id: "4",
-        name: "Order-4",
-        created_at: "29/11/2024",
-        price: 10000
-    },
-    {
-        id: "5",
-        name: "Order-5",
-        created_at: "29/11/2024",
-        price: 54000
-    },
-]
+interface menuType {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  category: string;
+  createdDate: string;
+  updateddDate: string;
+}
 
 const Menu = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const baseUrl = import.meta.env.VITE_BASE_URL;
+  const token = localStorage.getItem("token");
+  const [menuList, setmenuList] = useState<menuType[]>();
+
+  const itemPerpage = 10;
+  const name = searchParams.get("name") || null;
+  const skip = parseInt(searchParams.get("skip") || "0");
+  const [totalItem, setTotalItem] = useState<number>();
+
+  useEffect(() => {
+    const fetchMenuList = async () => {
+      const respones = await axios.get(
+        `${baseUrl}/Product/getproductListByName`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            skip,
+            take: itemPerpage,
+            name,
+          },
+        }
+      );
+      if (respones.status === 200) {
+        if (respones.data) {
+          console.log(respones.data);
+          setmenuList(respones.data?.data?.products);
+          setTotalItem(respones.data?.data?.totalCounts);
+        }
+      }
+    };
+    fetchMenuList();
+  }, [baseUrl, token, skip, name]);
+
   return (
     <div className="w-full h-full flex flex-col gap-4">
       <div className="w-full flex items-center justify-start">
@@ -56,12 +72,24 @@ const Menu = () => {
         </div>
         <div>
           <div className="flex flex-row gap-4">
-            <button onClick={() => navigate("createmenu")} className="bg-secondary text-white rounded-md min-h-12 hover:bg-white hover:text-black hover:border-black">Add New</button>
+            <button
+              onClick={() => navigate("createmenu")}
+              className="bg-secondary text-white rounded-md min-h-12 hover:bg-white hover:text-black hover:border-black"
+            >
+              Add New
+            </button>
           </div>
         </div>
       </div>
       <div className="w-full mt-4">
-        <CustomTable column={ORDER_COLUMN()} tableData={dummyData} />
+        <CustomTable column={MENU_COLUMN()} tableData={menuList || []} />
+      </div>
+      <div className="w-full flex items-center justify-center">
+        <Pagination
+          total_items={totalItem}
+          itemPerpage={itemPerpage}
+          queryParams={{ name }}
+        />
       </div>
     </div>
   );
