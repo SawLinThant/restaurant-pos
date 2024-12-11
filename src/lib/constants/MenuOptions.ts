@@ -5,10 +5,10 @@ export const Roles = [
       value: "WAITER",
       label: "Waiter",
     },
-    // {
-    //   value: "MANAGER",
-    //   label: "Manager",
-    // },
+    {
+      value: "ADMIN",
+      label: "Admin",
+    },
     {
       value: "CHIEF",
       label: "Chief",

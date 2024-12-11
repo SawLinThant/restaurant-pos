@@ -1,41 +1,68 @@
 import CustomTable from "@/components/common/customtable";
 import { ORDER_COLUMN } from "@/components/common/customtable/columns";
+import Pagination from "@/components/common/pagination";
+import { baseUrl } from "@/lib/constants/config";
+import axios from "axios";
+import { endOfDay, startOfDay } from "date-fns";
+import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
+import { useSearchParams } from "react-router-dom";
 
-const dummyData = [
-  {
-    id: "1",
-    name: "Order-1",
-    created_at: "29/11/2024",
-    price: 30000,
-  },
-  {
-    id: "2",
-    name: "Order-2",
-    created_at: "29/11/2024",
-    price: 24000,
-  },
-  {
-    id: "3",
-    name: "Order-3",
-    created_at: "29/11/2024",
-    price: 60000,
-  },
-  {
-    id: "4",
-    name: "Order-4",
-    created_at: "29/11/2024",
-    price: 10000,
-  },
-  {
-    id: "5",
-    name: "Order-5",
-    created_at: "29/11/2024",
-    price: 54000,
-  },
-];
+
+
+interface orderType {
+  id: string;
+  userId: string;
+  status: string;
+  createdDate: string;
+  updatedDate: string;
+  table: string;
+}
 
 const Overview = () => {
+  const [orderList, setorderList] = useState<orderType[]>();
+  const [searchParams] = useSearchParams();
+  const token = localStorage.getItem("token");
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const itemPerpage = 10;
+  const skip = parseInt(searchParams.get("skip") || "0");
+  const [totalItem, setTotalItem] = useState<number>();
+
+  useEffect(() => {
+    const fetchorderList = async () => {
+      try {
+        setLoading(true);
+        const formattedStartDate = startDate ? startOfDay(startDate) : undefined;
+        const formattedEndDate = endDate ? endOfDay(endDate) : undefined;
+        const respones = await axios.get(`${baseUrl}/Order/getList`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            skip,
+            take: itemPerpage,
+            startDate: formattedStartDate?.toISOString(), 
+            endDate: formattedEndDate?.toISOString(), 
+          },
+        });
+        if (respones.status === 200) {
+          if (respones.data) {
+            setorderList(respones.data?.data?.orders);
+            setTotalItem(respones.data?.data?.totalCounts);
+          }
+        }
+      } catch (error) {
+        throw new Error("error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchorderList();
+  }, [baseUrl, token, skip, startDate, endDate]);
+
   return (
     <div className="w-full h-full flex flex-col gap-4">
       <div className="w-full flex items-center justify-start">
@@ -91,7 +118,14 @@ const Overview = () => {
         <div></div>
       </div>
       <div className="w-full">
-        <CustomTable column={ORDER_COLUMN()} tableData={dummyData} />
+        <CustomTable loading={loading} column={ORDER_COLUMN()} tableData={orderList || []} />
+      </div>
+      <div className="w-full flex items-center justify-center">
+        <Pagination
+          total_items={totalItem}
+          itemPerpage={itemPerpage}
+          queryParams={{ startDate,endDate }}
+        />
       </div>
     </div>
   );
