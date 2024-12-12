@@ -79,11 +79,15 @@ export const MENU_COLUMN = () => [
 export const STAFF_COLUMN = () => [
   columnHelper.accessor("name", {
     cell: (info) => <span>{info.getValue()}</span>,
-    header: () => <span className="">Name</span>,
+    header: () => <span>Name</span>,
   }),
   columnHelper.accessor("email", {
     cell: (info) => <span>{info.getValue()}</span>,
     header: () => <span className="">Email</span>,
+  }),
+  columnHelper.accessor("phone", {
+    cell: (info) => <span>{info.getValue()}</span>,
+    header: () => <span className="">Phone No</span>,
   }),
   columnHelper.accessor("role", {
     cell: (info) => <span>{info.getValue()}</span>,
