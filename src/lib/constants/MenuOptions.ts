@@ -5,10 +5,10 @@ export const Roles = [
       value: "WAITER",
       label: "Waiter",
     },
-    // {
-    //   value: "MANAGER",
-    //   label: "Manager",
-    // },
+    {
+      value: "ADMIN",
+      label: "Admin",
+    },
     {
       value: "CHIEF",
       label: "Chief",
@@ -17,15 +17,19 @@ export const Roles = [
 
 export const Category = [
   {
-    value: "drink",
-    label: "Drink",
+    value: "appetizer",
+    label: "Appetizer",
   },
   {
-    value: "desert",
-    label: "Desert",
+    value: "dessert",
+    label: "Dessert",
   },
   {
-    value: "burmese food",
-    label: "Burmese Food",
+    value: "main course",
+    label: "Main Course",
+  },
+  {
+    value: "beverage",
+    label: "Beverage",
   },
 ]

@@ -1,6 +1,7 @@
 import ComboBox from "@/components/common/custom-dropdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { baseUrl } from "@/lib/constants/config";
 import { Roles } from "@/lib/constants/MenuOptions";
 import axios from "axios";
 import { Loader } from "lucide-react";
@@ -13,9 +14,9 @@ import "react-toastify/dist/ReactToastify.css";
 const StaffForm = () => {
  const navigate = useNavigate();
  const [role,setRole] = useState<string>("");
- const baseUrl = import.meta.env.VITE_BASE_URL;
  const [createLoading, setCreateLoading] = useState<boolean>(false);
  const {register:staffRegister,handleSubmit:createStaffSubmit} = useForm();
+ 
  const handleCreateStaff = createStaffSubmit(async(data) => {
    if(data.password !== data.confirm_password){
        toast.warning("Password do not match");
@@ -24,12 +25,13 @@ const StaffForm = () => {
    try{
      setCreateLoading(true);
      const payload = {
-      username: data.name,
+      name: data.name,
+      email: data.email,
       phone: data.phone,
       role: role,
       password: data.password
      }
-     const response = await axios.post(`${baseUrl}/`,payload);
+     const response = await axios.post(`${baseUrl}/auth/register`,payload);
      if(response.status === 200){
       toast.success("Staff created")
      }
@@ -80,6 +82,16 @@ const StaffForm = () => {
                 </div>
                 <div className="w-full flex flex-col pl-6 gap-4">
                 <div className="w-full flex flex-col gap-2 items-start justify-start">
+                    <label htmlFor="">Email</label>
+                    <Input 
+                    placeholder="Enter staff name"
+                    type="email"  
+                    {...staffRegister("email",{
+                      required:"Email is required"
+                    })}
+                    />
+                  </div>
+                <div className="w-full flex flex-col gap-2 items-start justify-start">
                     <label htmlFor="">Password</label>
                     <Input 
                     placeholder="Enter password"
@@ -107,7 +119,7 @@ const StaffForm = () => {
                   Cancel
                 </Button>
                 <Button className="bg-secondary text-white min-w-[7rem] hover:text-black hover:border-green-600">
-                 {createLoading?<Loader/>:"Create"}
+                 {createLoading?<Loader className="animate-spin"/>:"Create"}
                 </Button>
               </div>
             </form>
