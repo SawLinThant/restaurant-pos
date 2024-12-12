@@ -1,5 +1,7 @@
+import LoginForm from "@/components/account/login";
+
 const Login = () => {
-  return <div>Implement Login here</div>;
+  return <div><LoginForm/></div>;
 };
 
 export default Login;

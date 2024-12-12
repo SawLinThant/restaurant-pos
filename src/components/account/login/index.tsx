@@ -24,18 +24,11 @@ const LoginForm : React.FC = () => {
         const response = await axios.post(`${baseUrl}/auth/login`, payload)
         if(response.status === 200){
           const token = response.data.data.token;
-<<<<<<< HEAD
-          const decodedToken = decodeToken(token);
-          const role = decodedToken?.role 
-          if(role === "WAITER"){
-            navigate('/home')
-=======
           localStorage.setItem("token",token);
           const decodedToken = decodeToken(token);
           const role = decodedToken?.role 
           if(role === "WAITER"){
             navigate('/home/order')
->>>>>>> feature/dashboard
           }else{
             navigate('/dashboard')
           } 
