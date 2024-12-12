@@ -23,10 +23,9 @@ const Overview = () => {
   const [orderList, setorderList] = useState<orderType[]>();
   const [searchParams] = useSearchParams();
   const token = localStorage.getItem("token");
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [startDate] = useState<Date>(startOfDay(new Date()));
+  const [endDate] = useState<Date>(endOfDay(new Date()));
   const itemPerpage = 10;
   const skip = parseInt(searchParams.get("skip") || "0");
   const [totalItem, setTotalItem] = useState<number>();
