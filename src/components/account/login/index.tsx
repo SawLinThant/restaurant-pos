@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { baseUrl } from "@/lib/constants/config";
 import { decodeToken } from "@/lib/utils";
 import axios from "axios";
 import { Loader } from "lucide-react";
@@ -13,7 +14,6 @@ const LoginForm : React.FC = () => {
   const navigate = useNavigate();
   const {handleSubmit:loginSubmit, register:loginRegister} = useForm();
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
-  const baseUrl = import.meta.env.VITE_BASE_URL;
   const handleLogin = loginSubmit(async(data) => {
       try{
         setLoginLoading(true);
