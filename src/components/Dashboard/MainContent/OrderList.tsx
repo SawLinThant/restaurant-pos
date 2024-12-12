@@ -5,7 +5,7 @@ import Pagination from "@/components/common/pagination";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 interface orderType {
   id: string;
@@ -17,7 +17,6 @@ interface orderType {
 }
 
 const OrderList = () => {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const token = localStorage.getItem("token");
