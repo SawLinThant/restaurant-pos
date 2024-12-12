@@ -18,10 +18,12 @@ interface menuType {
 
 const Menu = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams,setSearchParams] = useSearchParams();
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const token = localStorage.getItem("token");
   const [menuList, setmenuList] = useState<menuType[]>();
+  const [loading,setLoading] = useState<boolean>(false);
+  const [searchQuery,setSearchQuery] = useState(searchParams.get("name") || "")
 
   const itemPerpage = 10;
   const name = searchParams.get("name") || null;
@@ -30,29 +32,47 @@ const Menu = () => {
 
   useEffect(() => {
     const fetchMenuList = async () => {
-      const respones = await axios.get(
-        `${baseUrl}/Product/getproductListByName`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            skip,
-            take: itemPerpage,
-            name,
-          },
+      try{
+        setLoading(true)
+        const respones = await axios.get(
+          `${baseUrl}/Product/getproductListByName`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              skip,
+              take: itemPerpage,
+              name,
+            },
+          }
+        );
+        if (respones.status === 200) {
+          if (respones.data) {
+            setmenuList(respones.data?.data?.products);
+            setTotalItem(respones.data?.data?.totalCounts);
+          }
         }
-      );
-      if (respones.status === 200) {
-        if (respones.data) {
-          console.log(respones.data);
-          setmenuList(respones.data?.data?.products);
-          setTotalItem(respones.data?.data?.totalCounts);
-        }
+      }catch(error){
+        throw new Error("error fetching data")
+      }finally{
+        setLoading(false)
       }
+   
     };
     fetchMenuList();
   }, [baseUrl, token, skip, name]);
+
+  const handleSearch = (name: string) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (name) {
+      newParams.set("name", name); // Use `name` parameter
+    } else {
+      newParams.delete("name");
+    }
+    newParams.set("skip", "0"); // Reset to the first page
+    setSearchParams(newParams);
+  };
 
   return (
     <div className="w-full h-full flex flex-col gap-4">
@@ -62,8 +82,13 @@ const Menu = () => {
       <div className="w-full flex flex-row items-start justify-between mt-4">
         <div className="w-1/3 h-[3rem] relative">
           <input
-            placeholder="Order ID"
+            placeholder="Search"
             type="text"
+            value={searchQuery}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearchQuery(value); 
+              handleSearch(value)}}
             className="w-full h-full px-4 pl-10 rounded-md border border-gray-600"
           />
           <div className="absolute left-2 top-3 z-10">
@@ -82,7 +107,7 @@ const Menu = () => {
         </div>
       </div>
       <div className="w-full mt-4">
-        <CustomTable column={MENU_COLUMN()} tableData={menuList || []} />
+        <CustomTable loading={loading} column={MENU_COLUMN()} tableData={menuList || []} />
       </div>
       <div className="w-full flex items-center justify-center">
         <Pagination
