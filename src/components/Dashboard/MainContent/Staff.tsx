@@ -39,7 +39,7 @@ const Staff = () => {
           );
           if (respones.status === 200) {
             if (respones.data) {
-              setUserList(respones.data?.data?.products);
+              setUserList(respones.data?.data?.users);
               setTotalUser(respones.data?.data?.totalCounts);
             }
           }
