@@ -8,7 +8,7 @@ import { CiSearch } from "react-icons/ci";
 import { useSearchParams } from "react-router-dom";
 
 interface orderType {
-  id: string;
+  Id: string;
   userId: string;
   status: string;
   createdDate: string;
