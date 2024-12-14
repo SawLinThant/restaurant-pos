@@ -1,49 +1,17 @@
-import { baseUrl } from "@/lib/constants/config";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import OrderDetail from "@/components/common/product-detail";
+import { useGetOrderDetail } from "@/lib/hooks/order/useGetOrderDetail";
+import { Loader2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 
-interface orderDetail {
-   name: string
-   price: number
-   category: string
-   description: string
-}
 
-const OrderDetail = () => {
+
+const OrderDetailPage = () => {
     const {orderId} = useParams();
-    const token = localStorage.getItem("token");
-    const [orderDetail,setOrderDetail] = useState<orderDetail>();
-    console.log(orderId)
-    useEffect(() => {
-        const fetchData = async() => {
-        const responses = await axios.get(`${baseUrl}/Product/get`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-              },
-              params: {
-               id: orderId
-              },
-        })
-        if (responses.status === 200) {
-            console.log(responses.data);
-            setOrderDetail({
-                name: responses.data?.data.name,
-                price: responses.data?.data.price,
-                category: responses.data?.data.category,
-                description: responses.data?.data.description
-            });
-          }
-        }
-        fetchData();
-    },[orderId])
+    const {data:orderDetail, isLoading, isError, error} = useGetOrderDetail(orderId || "")
+    console.log(orderDetail)
+    if(isLoading)return <div className="w-full h-[70vh] flex items-center justify-center"><Loader2 className="animate-spin" size={30}/> Loading</div>
     return(
-        <div className="flex flex-col gap-4">
-            <div>{orderDetail?.name}</div>
-            <div>{orderDetail?.price}</div>
-            <div>{orderDetail?.category}</div>
-            <div>{orderDetail?.description}</div>
-        </div>
+       <OrderDetail data={orderDetail || null}/>
     )
 }
-export default OrderDetail;
+export default OrderDetailPage;

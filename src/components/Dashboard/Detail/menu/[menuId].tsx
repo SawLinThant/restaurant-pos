@@ -109,7 +109,7 @@ const MenuDetail = () => {
   }, [menuId]);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div className="w-full flex items-center justify-center">
       <ToastContainer autoClose={3000} position="top-center"/>
       <div className="w-full flex flex-col gap-4 border border-gray-300  rounded-md p-6 lg:w-[60vw] max-w-[900px] md:w-[70vw]">
         <div className="w-full px-4">

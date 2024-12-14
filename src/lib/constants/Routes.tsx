@@ -20,7 +20,7 @@ export const AdminRoutes:Routeprops[] = [
     {
         id: 2,
         label:'Order List',
-        path: 'orderlist',
+        path: 'order',
         icon: <TfiMenuAlt size={20}/>
     },
     {
