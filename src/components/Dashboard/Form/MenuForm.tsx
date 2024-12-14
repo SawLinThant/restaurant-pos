@@ -53,7 +53,7 @@ const MenuForm = () => {
           name: data.name,
           price: parseInt(data.price),
           category: category,
-          image_url: uploadedImageUrl,
+          image: uploadedImageUrl,
           description: data.description
         };
         const response = await axios.post(

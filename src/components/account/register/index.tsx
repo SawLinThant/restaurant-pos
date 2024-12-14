@@ -1,6 +1,7 @@
 import ComboBox from "@/components/common/custom-dropdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { baseUrl } from "@/lib/constants/config";
 import { Roles } from "@/lib/constants/MenuOptions";
 import axios from "axios";
 import { Loader } from "lucide-react";
@@ -14,8 +15,7 @@ const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState<string>("");
   const [registerLoading, setRegsiterLoading] = useState<boolean>(false);
-  const { handleSubmit: createSubmit, register: createRegister,reset:resetForm } = useForm();
-  const baseUrl = import.meta.env.VITE_BASE_URL; 
+  const { handleSubmit: createSubmit, register: createRegister,reset:resetForm } = useForm(); 
 
   const reset = () => {
     resetForm();

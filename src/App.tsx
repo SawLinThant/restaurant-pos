@@ -1,27 +1,27 @@
 // import "./App.css";
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
+import MainScreen from "./pages/Dashboard";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import MainScreen from "./pages/Dashboard";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
+  const queryClient = new QueryClient();
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/home/*" element={<Home />} />
-          <Route path="/dashboard/*" element={<MainScreen />} />
-          <Route path="*" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          {/* <Route path="*" element={<Navigate to={"/"} replace />} /> */}
-        </Routes>
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/home/*" element={<Home />} />
+            <Route path="/dashboard/*" element={<MainScreen />} />
+            <Route path="*" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            {/* <Route path="*" element={<Navigate to={"/"} replace />} /> */}
+          </Routes>
+        </Router>
+      </QueryClientProvider>
     </>
   );
 }
