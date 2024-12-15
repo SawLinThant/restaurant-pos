@@ -33,3 +33,18 @@ export const Category = [
     label: "Beverage",
   },
 ]
+
+export const OrderStatus = [
+  {
+    value: "in progress",
+    label: "In Progress",
+  },
+  {
+    value: "served",
+    label: "Served",
+  },
+  {
+    value: "complete",
+    label: "Complete",
+  },
+]
