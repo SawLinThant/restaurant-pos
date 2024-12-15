@@ -1,11 +1,14 @@
 import { Product } from "@/lib/hooks/useGetProductList";
 import DotIcon from "../icons/dot";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/store/slices/orderCartSlice";
 
 interface DishCardProps {
   product: Product;
 }
 
 const DishCard = ({ product }: DishCardProps) => {
+  const dispatch = useDispatch();
   return (
     <div className="flex w-full sm:w-[330px] flex-shrink flex-col bg-[#F6F6F6] rounded-[10px]  pt-[25px] pl-[25px] pr-[15px] pb-[15px]">
       <div className="flex overflow-y-auto">
@@ -36,7 +39,22 @@ const DishCard = ({ product }: DishCardProps) => {
           <span className="font-[500] text-[18px]">{product.price}MMK</span>
         </div>
         <div className="w-1/2">
-          <button className="bg-[#009258] py-[7px] px-[44px] text-[16p] font-[500] text-white rounded-[10px]">Add</button>
+          <button 
+            onClick={() =>
+              dispatch(
+                addToCart({
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  image: product.image,
+                  quantity: 1,
+                })
+              )
+            }
+            className="bg-[#009258] py-[7px] px-[44px] text-[16p] font-[500] text-white rounded-[10px]"
+          >
+            Add
+          </button>
         </div>
       </div>
     </div>
