@@ -3,16 +3,18 @@ import OrderCartDetail from "./OrderCartDetail";
 import { RootState } from "@/store/store";
 import { clearCart } from "@/store/slices/orderCartSlice";
 
-const OrderCart = () => {
-  const { cartItems } = useSelector((state: RootState) => state.orderCart);
+const OrderCart = ({ tableId }: { tableId: string }) => {
+  const tableNo = tableId;
+  const orderCart = useSelector((state: RootState) => state.orderCart);
+  const currentTable = orderCart.find((item) => item.tableId === tableNo);
   const dispatch = useDispatch();
-  function calcilateSubTotoal(){
-    return cartItems.reduce((prevValue,currentValue)=>{
-      return prevValue + currentValue.price * currentValue.quantity
-    },0).toString()
-  }
+  // function calcilateSubTotoal(){
+  //   return currentTable?.orderItems.reduce((prevValue,currentValue)=>{
+  //     return prevValue + currentValue.price * currentValue.quantity
+  //   },0).toString()
+  // }
   return (
-    <div className="flex w-[30rem] flex-col shadow-OrderCartShadow px-[25px] h-[calc(100vh-10vh)] pt-[20px] pb-[30px] ">
+    <div className="flex w-full flex-col shadow-OrderCartShadow px-[25px] h-[calc(100dvh)] pt-[20px] pb-[30px] ">
       <span className="mb-[30px] text-[18px] font-[500] leading-[21px]">
         Customer Information
       </span>
@@ -25,18 +27,18 @@ const OrderCart = () => {
         Order Details
       </span>
       <span
-        onClick={() => dispatch(clearCart())}
+        onClick={() => dispatch(clearCart({ tableId: tableNo }))}
         className="text-[14px] font-[500] leading-[21px] mb-[30px] cursor-pointer text-red-600"
       >
         Clear cart
       </span>
       <div className="flex w-full flex-col hover:overflow-y-auto overflow-y-hidden custom-scrollbar">
-        {cartItems.map((item) => (
-          <div className="flex w-full flex-col  ">
-            <OrderCartDetail item={item} />
+        {currentTable?.orderItems?.map((item) => (
+          <div className="flex w-full flex-col" key={item.id}>
+            <OrderCartDetail item={item} tableId={tableNo} />
           </div>
         ))}
-        {cartItems.length <= 0 && (
+        {(currentTable?.orderItems ?? []).length <= 0 && (
           <>
             <div className="flex w-full items-center justify-center h-[200px] text-gray-400 italic">
               No items in cart
@@ -49,7 +51,7 @@ const OrderCart = () => {
             <div className="grid grid-cols-2 w-full">
               <span className="text-[#00000080]">Subtotal</span>
               <span className="flex w-full items-end justify-end text-right text-black">
-                {calcilateSubTotoal()} MMk
+                {100000} MMk
               </span>
             </div>
             <div className="grid grid-cols-2 w-full mt-[20px]">
@@ -62,7 +64,7 @@ const OrderCart = () => {
             <div className="grid grid-cols-2 w-full">
               <span className="">Total</span>
               <span className="flex w-full items-end justify-end text-right text-black">
-                {calcilateSubTotoal()} MMk
+                {1000} MMk
               </span>
             </div>
           </div>
