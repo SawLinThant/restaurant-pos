@@ -1,30 +1,61 @@
+import {
+  OrderItemProps,
+  removeFromCart,
+  updateCartItemQuantity,
+} from "@/store/slices/orderCartSlice";
 import MinusIcon from "../icons/minus";
 import PlusIcon from "../icons/plus";
+import { useDispatch } from "react-redux";
 
-const OrderCartDetail = () => {
+const OrderCartDetail = ({ item }: { item: OrderItemProps }) => {
+  const dispatch = useDispatch();
   return (
     <div className="flex w-full flex-col">
       <div className="grid grid-cols-2 w-full">
         <div className="">
           <img
-            src="/dishes/steak.jpg"
+            src={item.image || "/dishes/steak.jpg"}
             width={256}
             height={128}
             className="w-[130px] h-[130px] rounded-[10px] object-cover align-top"
           />
         </div>
         <div className="flex flex-col w-full gap-y-[23px]">
-          <span>Salad</span>
+          <span>{item.name}</span>
           <div className="flex w-full items-center justify-start gap-x-[20px]">
-            <div className="rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center">
+            <div
+              onClick={() => {
+                if (item.quantity > 1) {
+                  dispatch(
+                    updateCartItemQuantity({
+                      id: item.id,
+                      quantity: item.quantity - 1,
+                    })
+                  );
+                } else {
+                  dispatch(removeFromCart(item.id));
+                }
+              }}
+              className="rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center"
+            >
               <MinusIcon />
             </div>
-            <span>2</span>
-            <div className="rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center">
+            <span>{item.quantity}</span>
+            <div
+              onClick={() =>
+                dispatch(
+                  updateCartItemQuantity({
+                    id: item.id,
+                    quantity: item.quantity + 1,
+                  })
+                )
+              }
+              className="rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center"
+            >
               <PlusIcon />
             </div>
           </div>
-          <span>20000 MMK</span>
+          <span>{item.price * item.quantity} MMK</span>
         </div>
       </div>
       <div className="border[#00000080] w-full border-[0.5px] mt-[30px] mb-[30px]" />
