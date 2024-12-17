@@ -36,15 +36,15 @@ export const Category = [
 
 export const OrderStatus = [
   {
-    value: "in progress",
+    value: "PROCESSING",
     label: "In Progress",
   },
   {
-    value: "served",
+    value: "DELIVERING",
     label: "Served",
   },
   {
-    value: "complete",
+    value: "COMPLETE",
     label: "Complete",
   },
 ]
