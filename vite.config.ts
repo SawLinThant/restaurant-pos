@@ -10,4 +10,16 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+     // This will ignore all eslint warnings/errors during build
+     rollupOptions: {
+      onwarn(warning, warn) {
+        // Skip certain warnings
+        if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return
+        
+        // Use default for everything else
+        warn(warning)
+      }
+    }
+  },
 })

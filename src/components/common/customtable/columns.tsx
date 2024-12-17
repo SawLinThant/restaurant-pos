@@ -21,7 +21,7 @@ export const ORDER_COLUMN = () => [
     cell: (info) => <span>{info.getValue()}</span>,
     header: () => <span className="column-head">Status</span>,
   }),
-  columnHelper.accessor("id", {
+  columnHelper.accessor("Id", {
     cell: (info) => {
       const navigate = useNavigate();
       return(
