@@ -11,11 +11,11 @@ const axiosInstance = axios.create({
   },
 });
 
-export const useStaffDetail = (id: string) => {
+export const useGetStaffDetail = (id: string) => {
   return useQuery<UserResponse, AxiosError<ApiError>>({
     queryKey: ["user", id],
     queryFn: async () => {
-      const response = await axiosInstance.get<UserResponse>("/User/get", {
+      const response = await axiosInstance.get<UserResponse>("/User/getUserById", {
         params: { id },
       });
       return response.data;

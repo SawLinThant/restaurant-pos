@@ -11,7 +11,7 @@ const Sidebar: React.FC = () => {
     navigate("/")
   }
   return (
-    <div className="w-[15vw] min-w-[200px] h-[97vh] max-h-screen p-4 border-2 rounded-md shadow-md flex flex-col justify-between">
+    <div className="lg:w-[15vw] lg:min-w-[200px] h-[97vh] max-h-screen p-4 border-2 rounded-md shadow-md hidden lg:flex flex-col justify-between">
       <div className="w-full overflow-y-auto flex flex-col gap-3">
         <div className="w-full h-24 rounded-md bg-secondary">
           <div className="w-full h-full flex items-center justify-center">
@@ -19,8 +19,9 @@ const Sidebar: React.FC = () => {
           </div>
         </div>
         <div className="w-full flex flex-col gap-2">
-          {AdminRoutes.map((route) => (
+          {AdminRoutes.map((route,index) => (
             <div
+            key={index}
               onClick={() => {
                 navigate(`${route.path}`);
               }}

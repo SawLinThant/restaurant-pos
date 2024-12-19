@@ -16,7 +16,7 @@ const Staff = () => {
     const name = searchParams.get("name") || null;
     const [searchQuery,setSearchQuery] = useState(searchParams.get("name") || "")
     
-    const itemPerpage = 10;
+    const itemPerpage = 5;
     const skip = parseInt(searchParams.get("skip") || "0");
     const [totalUser, setTotalUser] = useState<number>();
 
