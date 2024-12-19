@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 const OrderDetailPage = () => {
   const { orderId } = useParams();
   const { data: orderDetail, isLoading } = useGetOrderDetail(orderId || "");
-  console.log(orderDetail);
   if (isLoading)
     return (
       <div className="w-full h-[70vh] flex items-center justify-center">

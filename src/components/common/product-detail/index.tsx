@@ -44,7 +44,7 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
   return (
     <div className="w-full h-full flex items-start justify-center">
       <ToastContainer autoClose={3000} position="top-center" />
-      <div className="w-full flex flex-col gap-4 border border-gray-300  rounded-md lg:p-8 md:p-6 p-2 lg:w-[60vw] max-w-[900px] md:w-[70vw] mt-2">
+      <div className="w-full flex flex-col gap-4 border border-gray-300  rounded-md lg:p-8 md:p-6 p-2 lg:w-[60vw] max-w-[900px] md:w-[90vw] mt-2">
         <div className="w-full flex flex-col gap-4">
           <div className="w-full flex flex-row justify-between">
             <h2 className="font-semibold text-xl">Order Detail</h2>

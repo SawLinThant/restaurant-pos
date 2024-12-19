@@ -38,9 +38,12 @@ export interface PaginationParams {
 }
 
 export interface UserResponse {
-  id: string
-  name: string
-  role: string
-  email: string
-  phone: string
+  data:{
+    id: string
+    name: string
+    role: string
+    email: string
+    phone: string
+  }
+ 
 }

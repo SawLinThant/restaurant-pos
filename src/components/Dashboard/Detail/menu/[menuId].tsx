@@ -109,9 +109,9 @@ const MenuDetail = () => {
   }, [menuId]);
 
   return (
-    <div className="w-full flex items-center justify-center">
+    <div className="w-full h-full flex items-center justify-center">
       <ToastContainer autoClose={3000} position="top-center"/>
-      <div className="w-full flex flex-col gap-4 border border-gray-300  rounded-md p-6 lg:w-[60vw] max-w-[900px] md:w-[70vw]">
+      <div className="w-full flex flex-col gap-4 border border-gray-300  rounded-md p-6 lg:w-[60vw] max-w-[900px] md:w-[90vw]">
         <div className="w-full px-4 flex flex-row items-center justify-end">
         <div onClick={() => navigate(-1)} className="hover:cursor-pointer">
               <X size={30} color="black" />
@@ -126,7 +126,7 @@ const MenuDetail = () => {
                 ) : (
                   <img
                     src={menuDetail?.image}
-                    className="object-cover bg-cover rounded-md"
+                    className="object-cover bg-cover w-full max-h-[400px] rounded-md"
                   />
                 )}
               </div>

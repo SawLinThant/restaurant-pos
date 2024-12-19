@@ -1,6 +1,7 @@
 import CustomTable from "@/components/common/customtable";
 import { ORDER_COLUMN } from "@/components/common/customtable/columns";
 import Pagination from "@/components/common/pagination";
+import Chart from "@/components/common/chart";
 import { baseUrl } from "@/lib/constants/config";
 import axios from "axios";
 import { endOfDay, startOfDay } from "date-fns";
@@ -43,8 +44,8 @@ const Overview = () => {
           params: {
             skip,
             take: itemPerpage,
-            startDate: formattedStartDate?.toISOString(), 
-            endDate: formattedEndDate?.toISOString(), 
+            startDate: formattedStartDate?.toISOString(),
+            endDate: formattedEndDate?.toISOString(),
           },
         });
         if (respones.status === 200) {
@@ -67,9 +68,9 @@ const Overview = () => {
       <div className="w-full flex items-center justify-start">
         <h2 className="font-semibold text-2xl">Overview</h2>
       </div>
-      <div className="w-full grid grid-cols-2 gap-4">
+      <div className="w-full grid md:grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="w-full pr-3 py-3">
-          <div className="w-full grid grid-cols-2 gap-4">
+          <div className="w-full h-full grid grid-cols-2 gap-4">
             <div className="w-full min-h-44 rounded-md border-2 shadow-md flex items-center justify-center">
               <div className="flex flex-col gap-2 items-center justify-center">
                 <h2 className="font-semibold text-xl">130000</h2>
@@ -96,8 +97,8 @@ const Overview = () => {
             </div>
           </div>
         </div>
-        <div className="w-full p-3">
-          <div className="w-full h-full rounded-md border-2 shadow-md"></div>
+        <div className="w-full p-3 md:ps-0">
+          <div className="w-full h-full rounded-md border-2 shadow-md"><Chart /></div>
         </div>
       </div>
       <div className="w-full flex items-center justify-start mt-8">
@@ -123,7 +124,7 @@ const Overview = () => {
         <Pagination
           total_items={totalItem}
           itemPerpage={itemPerpage}
-          queryParams={{ startDate,endDate }}
+          queryParams={{ startDate, endDate }}
         />
       </div>
     </div>
