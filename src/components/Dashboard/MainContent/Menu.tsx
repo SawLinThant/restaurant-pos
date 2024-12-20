@@ -106,7 +106,7 @@ const Menu = () => {
           </div>
         </div>
       </div>
-      <div className="w-full mt-4">
+      <div className="w-full overflow-auto mt-4">
         <CustomTable loading={loading} column={MENU_COLUMN()} tableData={menuList || []} />
       </div>
       <div className="w-full flex items-center justify-center">

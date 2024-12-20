@@ -69,8 +69,8 @@ const Staff = () => {
       <div className="w-full flex items-center justify-start">
         <h2 className="font-semibold text-2xl">Staff</h2>
       </div>
-      <div className="w-full flex flex-row items-start justify-between mt-4">
-        <div className="w-1/3 h-[3rem] relative">
+      <div className="w-full flex lg:flex-row md:flex-row flex-col gap-4 items-start justify-between mt-4">
+        <div className="lg:w-1/3 md:w-2/3 w-full h-[3rem] relative lg:order-none md:order-none order-2">
           <input
             placeholder="Staff name"
             type="text"
@@ -85,8 +85,8 @@ const Staff = () => {
             <CiSearch size={25} />
           </div>
         </div>
-        <div>
-          <div className="flex flex-row gap-4">
+        <div className="lg:min-w-[10rem] md:min-w-[10rem] w-full">
+          <div className="flex flex-row justify-end gap-4 lg:order-none md:order-none order-1">
             <button
               onClick={() => navigate("createstaff")}
               className="bg-secondary text-white rounded-md min-h-12 hover:bg-white hover:text-black hover:border-black"
@@ -96,7 +96,7 @@ const Staff = () => {
           </div>
         </div>
       </div>
-      <div className="w-full mt-4">
+      <div className="w-full mt-4 overflow-auto">
         <CustomTable loading={loading} column={STAFF_COLUMN()} tableData={userList || []} />
       </div>
       <div className="w-full flex items-center justify-center">

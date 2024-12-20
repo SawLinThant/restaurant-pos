@@ -105,7 +105,7 @@ const Overview = () => {
         <h2 className="font-semibold text-2xl">Daily Order Lists</h2>
       </div>
       <div className="w-full flex flex-row items-center justify-between mt-4">
-        <div className="w-1/3 h-[3rem] relative">
+        <div className="lg:w-1/3 md:w-2/3 w-full h-[3rem] relative">
           <input
             placeholder="Order ID"
             type="text"
@@ -117,7 +117,7 @@ const Overview = () => {
         </div>
         <div></div>
       </div>
-      <div className="w-full">
+      <div className="w-full min-h-36 overflow-auto">
         <CustomTable loading={loading} column={ORDER_COLUMN()} tableData={orderList || []} />
       </div>
       <div className="w-full flex items-center justify-center">

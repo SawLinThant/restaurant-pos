@@ -95,14 +95,14 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
               </div>
             ))}
         </div>
-        <div className="w-full flex flex-row justify-between">
-          <div className="w-[150px] flex flex-col gap-3">
+        <div className="w-full flex lg:flex-row md:flex-row flex-col gap-4 justify-between">
+          <div className="lg:w-[150px] md:w-[130px] w-full flex flex-col gap-3 lg:order-none md:order-none order-2">
             <CustomSelect setOptions={setOrderStatus} label="Select Status" options={OrderStatus} />
             <Button disabled={updateLoading} onClick={handleUpdateOrder} className="border bg-secondary rounded-md h-11 w-full hover:border-gray-600 hover:text-black flex items-center justify-center">
               {updateLoading?(<Loader className="animate-spin"/>):"Save"}
             </Button>
           </div>
-          <div className="min-w-[22rem] min-h-[10rem] p-6 bg-[#F1F1F1] rounded-md">
+          <div className="min-w-[22rem] min-h-[10rem] p-6 bg-[#F1F1F1] rounded-md lg:order-none md:order-none order-1">
             <div className="w-full h-full flex flex-col gap-2">
               <div className="w-full flex flex-row justify-between">
                 <span className="font-semibold">Subtotal</span>
