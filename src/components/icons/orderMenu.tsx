@@ -1,7 +1,7 @@
 import OrderCart from "../Order/OrderCart";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "../ui/sheet";
 
-function OrderMenu({ tableId }: { tableId: string }) {
+function OrderMenu({ tableId,orderId }: { tableId: string,orderId:string }) {
   return (
     <>
       <Sheet>
@@ -33,7 +33,7 @@ function OrderMenu({ tableId }: { tableId: string }) {
               account and remove your data from our servers.
             </SheetDescription> */}
           </SheetHeader>
-          <OrderCart tableId={tableId} />
+          <OrderCart tableId={tableId} orderId={orderId} />
         </SheetContent>
       </Sheet>
     </>

@@ -9,6 +9,7 @@ export interface OrderItemProps {
 }
 export interface OrderCartProps {
   tableId: string;
+  orderId:string;
   orderItems: OrderItemProps[];
 }
 
@@ -20,14 +21,14 @@ export const orderCartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       // Find if table exists
-      const existingTable = state.find(
-        (item) => item.tableId === action.payload.tableId
+      const existingOrder = state.find(
+        (item) => item.orderId === action.payload.orderId
       );
 
-      if (existingTable) {
+      if (existingOrder) {
         // Table exists, check if product exists in orderItems
         const existingProduct =
-          existingTable.orderItems?.find(
+          existingOrder.orderItems?.find(
             (item) => item.id === action.payload.cartItem.id
           ) || null;
 
@@ -37,14 +38,15 @@ export const orderCartSlice = createSlice({
           localStorage.setItem('orderCart', JSON.stringify(state));
         } else {
           // Product doesn't exist, add new product to orderItems
-          //existingTable.orderItems = [];
-          existingTable.orderItems.push(action.payload.cartItem);
+          //existingOrder.orderItems = [];
+          existingOrder.orderItems.push(action.payload.cartItem);
           localStorage.setItem('orderCart', JSON.stringify(state));
         }
       } else {
         // Table doesn't exist, add new table with orderItems
         state.push({
           tableId: action.payload.tableId,
+          orderId:action.payload.orderId,
           orderItems: [
             {
               id: action.payload.cartItem.id,
@@ -60,36 +62,36 @@ export const orderCartSlice = createSlice({
     },
     removeFromCart: (state, action) => {
       // Find if table exists
-      const existingTable = state.find(
-        (item) => item.tableId === action.payload.tableId
+      const existingOrder = state.find(
+        (item) => item.orderId === action.payload.orderId
       );
 
-      if (existingTable) {
+      if (existingOrder) {
         // Table exists, filter out the target orderItem
-        existingTable.orderItems = existingTable.orderItems.filter(
+        existingOrder.orderItems = existingOrder.orderItems.filter(
           (item) => item.id !== action.payload.cartItemId
         );
         localStorage.setItem('orderCart', JSON.stringify(state));
       }
     },
     clearCart: (state, action) => {
-      const existingTable = state.find(
-        (item) => item.tableId === action.payload.tableId
+      const existingOrder = state.find(
+        (item) => item.orderId === action.payload.orderId
       );
-      if (existingTable) {
-        existingTable.orderItems = [];
+      if (existingOrder) {
+        existingOrder.orderItems = [];
       }
       localStorage.setItem('orderCart', JSON.stringify(state));
     },
     updateCartItemQuantity: (state, action) => {
       // Find if table exists
-      const existingTable = state.find(
-        (item) => item.tableId === action.payload.tableId
+      const existingOrder = state.find(
+        (item) => item.orderId === action.payload.orderId
       );
 
-      if (existingTable) {
+      if (existingOrder) {
         // Table exists, find target orderItem
-        const existingProduct = existingTable.orderItems.find(
+        const existingProduct = existingOrder.orderItems.find(
           (item) => item.id === action.payload.cartItemId
         );
 

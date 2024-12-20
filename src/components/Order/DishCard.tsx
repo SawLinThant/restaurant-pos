@@ -3,24 +3,38 @@ import DotIcon from "../icons/dot";
 import { useDispatch, useSelector } from "react-redux";
 import MinusIcon from "../icons/minus";
 import PlusIcon from "../icons/plus";
-import { addToCart, removeFromCart, updateCartItemQuantity } from "@/store/slices/orderCartSlice";
+import {
+  addToCart,
+  removeFromCart,
+  updateCartItemQuantity,
+} from "@/store/slices/orderCartSlice";
 
 import { RootState } from "@/store/store";
+import clsx from "clsx";
 
 interface DishCardProps {
   product: Product;
   tableNo: string;
+  orderId:string;
 }
 
-const DishCard = ({ product, tableNo }: DishCardProps) => {
+const DishCard = ({ product, tableNo,orderId }: DishCardProps) => {
   const cart = useSelector((state: RootState) => state.orderCart);
-  console.log(cart.find((item) => item.tableId === tableNo)?.orderItems);
-  const quantity = cart
-    .find((item) => item.tableId === tableNo)
-    ?.orderItems?.find((item) => item.id === product.id)?.quantity ?? 0;
+  console.log("orderId:",orderId)
+  console.log(cart.find((item) => item.orderId === orderId)?.orderItems);
+  const quantity =
+    cart
+      .find((item) => item.orderId === orderId)
+      ?.orderItems?.find((item) => item.id === product.id)?.quantity ?? 0;
   const dispatch = useDispatch();
   return (
-    <div className="flex w-full  min-w-[330px] flex-shrink flex-col bg-[#F6F6F6] rounded-[10px]  pt-[25px] pl-[25px] pr-[15px] pb-[15px]" key={product.id}>
+    <div
+      className={clsx(
+        "flex w-full  min-w-[330px] flex-shrink flex-col bg-[#F6F6F6] rounded-[10px]  pt-[25px] pl-[25px] pr-[15px] pb-[15px]",
+        { "border-2 border-[#009258]": quantity > 0 }
+      )}
+      key={product.id}
+    >
       <div className="flex overflow-y-auto">
         <div className=" w-1/2 flex-shrink">
           <img
@@ -72,15 +86,16 @@ const DishCard = ({ product, tableNo }: DishCardProps) => {
                   dispatch(
                     updateCartItemQuantity({
                       tableId: tableNo,
+                      orderId:orderId,
                       cartItemId: product.id,
                       quantity: quantity - 1,
                     })
                   );
-                }
-                else {
+                } else {
                   dispatch(
                     removeFromCart({
                       tableId: tableNo,
+                      orderId:orderId,
                       cartItemId: product.id,
                     })
                   );
@@ -97,15 +112,16 @@ const DishCard = ({ product, tableNo }: DishCardProps) => {
                   dispatch(
                     updateCartItemQuantity({
                       tableId: tableNo,
+                      orderId:orderId,
                       cartItemId: product.id,
                       quantity: quantity + 1,
                     })
                   );
-                }
-                else {
+                } else {
                   dispatch(
                     addToCart({
                       tableId: tableNo,
+                      orderId:orderId,
                       cartItem: {
                         id: product.id,
                         name: product.name,

@@ -2,7 +2,7 @@ import { Product, useGetProductList } from "@/lib/hooks/useGetProductList";
 import DishCard from "./DishCard";
 //import { useCreateOrder } from "@/lib/hooks/useCreateOreder";
 
-const DishList = () => {
+const DishList = ({tableId,orderId}:{tableId:string,orderId:string}) => {
   const {
     data: menuList,
     isLoading,
@@ -17,7 +17,7 @@ const DishList = () => {
       refetchOnWindowFocus: false,
     }
   );
-  const tableNo = "1";
+  const tableNo =tableId || "1";
 
   // Handle loading state
   // if (isLoading) {
@@ -42,15 +42,15 @@ const DishList = () => {
   }
 
   // Handle case when data is undefined
-  if (!menuList?.data) {
-    return (
-      <div className="flex w-full flex-col">
-        <span className="mb-[30px] text-[25px] font-[500] leading-[30px]">
-          No menu items available
-        </span>
-      </div>
-    );
-  }
+  // if (!menuList?.data) {
+  //   return (
+  //     <div className="flex w-full flex-col">
+  //       <span className="mb-[30px] text-[25px] font-[500] leading-[30px]">
+  //         No menu items available
+  //       </span>
+  //     </div>
+  //   );
+  // }
 
   // const { mutate: createOrder } = useCreateOrder({
   //   onSuccess: () => {
@@ -88,11 +88,11 @@ const DishList = () => {
         {!isLoading && menuList?.data?.products.length > 0 ? (
           menuList?.data?.products.map((product: Product) => (
             <div key={product.id}>
-              <DishCard product={product} tableNo={tableNo} />
+              <DishCard product={product} tableNo={tableNo} orderId={orderId} />
             </div>
           ))
         ) : (
-          <div>No menu items available</div>
+          <>{!isLoading && <div>No menu items available</div>}</>
         )}
       </div>
     </div>
