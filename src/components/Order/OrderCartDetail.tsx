@@ -52,6 +52,7 @@ const OrderCartDetail = ({ item,tableId,orderId }: { item: OrderItemProps,tableI
                 dispatch(
                   updateCartItemQuantity({
                     tableId: tableId,
+                    orderId:orderId,
                     cartItemId: item.id,
                     quantity: item.quantity + 1,
                   })
