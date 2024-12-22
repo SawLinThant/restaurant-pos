@@ -2,7 +2,7 @@ import { Product, useGetProductList } from "@/lib/hooks/useGetProductList";
 import DishCard from "./DishCard";
 //import { useCreateOrder } from "@/lib/hooks/useCreateOreder";
 
-const DishList = ({tableId,orderId}:{tableId:string,orderId:string}) => {
+const DishList = () => {
   const {
     data: menuList,
     isLoading,
@@ -17,7 +17,7 @@ const DishList = ({tableId,orderId}:{tableId:string,orderId:string}) => {
       refetchOnWindowFocus: false,
     }
   );
-  const tableNo =tableId || "1";
+  
 
   // Handle loading state
   // if (isLoading) {
@@ -88,7 +88,7 @@ const DishList = ({tableId,orderId}:{tableId:string,orderId:string}) => {
         {!isLoading && menuList?.data?.products.length > 0 ? (
           menuList?.data?.products.map((product: Product) => (
             <div key={product.id}>
-              <DishCard product={product} tableNo={tableNo} orderId={orderId} />
+              <DishCard product={product}  />
             </div>
           ))
         ) : (

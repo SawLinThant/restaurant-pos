@@ -1,12 +1,13 @@
 function AddMenuIcon() {
   return (
-    <>
+    <div>
       <svg
         width="60"
         height="62"
         viewBox="0 0 100 102"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className="flex items-center justify-center p-0 border-0 focus:outline-none"
       >
         <g filter="url(#filter0_d_309_413)">
           <circle cx="50" cy="40" r="40" fill="#009258" />
@@ -53,7 +54,7 @@ function AddMenuIcon() {
           </filter>
         </defs>
       </svg>
-    </>
+    </div>
   );
 }
 

@@ -7,102 +7,58 @@ export interface OrderItemProps {
   quantity: number;
   image: string;
 }
-export interface OrderCartProps {
-  tableId: string;
-  orderId:string;
-  orderItems: OrderItemProps[];
-}
 
-const initialState: OrderCartProps[] = JSON.parse(localStorage.getItem('orderCart') || '[]');
+const initialState: OrderItemProps[] = []
 
 export const orderCartSlice = createSlice({
   name: "orderCart",
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      // Find if table exists
-      const existingOrder = state.find(
-        (item) => item.orderId === action.payload.orderId
-      );
+      console.log("addtoCart",action.payload)
+      // Find if item exists for this order
+      const existingItem = state.find((item) => item.id === action.payload.id);
 
-      if (existingOrder) {
-        // Table exists, check if product exists in orderItems
-        const existingProduct =
-          existingOrder.orderItems?.find(
-            (item) => item.id === action.payload.cartItem.id
-          ) || null;
-
-        if (existingProduct) {
-          // Product exists, increment quantity
-          existingProduct.quantity += 1;
-          localStorage.setItem('orderCart', JSON.stringify(state));
-        } else {
-          // Product doesn't exist, add new product to orderItems
-          //existingOrder.orderItems = [];
-          existingOrder.orderItems.push(action.payload.cartItem);
-          localStorage.setItem('orderCart', JSON.stringify(state));
-        }
+      if (existingItem) {
+        // Item exists, increment quantity
+        existingItem.quantity += 1;
       } else {
-        // Table doesn't exist, add new table with orderItems
+        // Add new item
         state.push({
-          tableId: action.payload.tableId,
-          orderId:action.payload.orderId,
-          orderItems: [
-            {
-              id: action.payload.cartItem.id,
-              name: action.payload.cartItem.name,
-              price: action.payload.cartItem.price,
-              quantity: action.payload.cartItem.quantity,
-              image: action.payload.cartItem.image,
-            },
-          ],
+          id: action.payload.id,
+          name: action.payload.name,
+          price: action.payload.price,
+          quantity: action.payload.quantity,
+          image: action.payload.image,
         });
-        localStorage.setItem('orderCart', JSON.stringify(state));
       }
+      //localStorage.setItem("orderCart", JSON.stringify(state));
     },
     removeFromCart: (state, action) => {
-      // Find if table exists
-      const existingOrder = state.find(
-        (item) => item.orderId === action.payload.orderId
+      // Filter out the target item
+      const newState = state.filter(
+        (item) => !(item.id === action.payload.cartItemId)
       );
-
-      if (existingOrder) {
-        // Table exists, filter out the target orderItem
-        existingOrder.orderItems = existingOrder.orderItems.filter(
-          (item) => item.id !== action.payload.cartItemId
-        );
-        localStorage.setItem('orderCart', JSON.stringify(state));
-      }
+      //localStorage.setItem('orderCart', JSON.stringify(newState));
+      return newState;
     },
-    clearCart: (state, action) => {
-      const existingOrder = state.find(
-        (item) => item.orderId === action.payload.orderId
-      );
-      if (existingOrder) {
-        existingOrder.orderItems = [];
-      }
-      localStorage.setItem('orderCart', JSON.stringify(state));
+    clearCart: () => {
+      // Remove all items for this order
+      return []
+      //localStorage.setItem('orderCart', JSON.stringify(newState));
     },
     updateCartItemQuantity: (state, action) => {
-      // Find if table exists
-      const existingOrder = state.find(
-        (item) => item.orderId === action.payload.orderId
+      // Find and update target item
+      const existingItem = state.find(
+        (item) => item.id === action.payload.cartItemId
       );
 
-      if (existingOrder) {
-        // Table exists, find target orderItem
-        const existingProduct = existingOrder.orderItems.find(
-          (item) => item.id === action.payload.cartItemId
-        );
-
-        if (existingProduct) {
-          // Product exists, update quantity
-          existingProduct.quantity = action.payload.quantity;
-        }
+      if (existingItem) {
+        existingItem.quantity = action.payload.quantity;
+        //localStorage.setItem('orderCart', JSON.stringify(state));
       }
-      localStorage.setItem('orderCart', JSON.stringify(state));
     },
-  }, 
+  },
 });
 
 export const { addToCart, removeFromCart, clearCart, updateCartItemQuantity } =

@@ -6,15 +6,15 @@ import { useCreateOrder } from "@/lib/hooks/useCreateOreder";
 import { useForm } from "react-hook-form";
 import { Loader } from "lucide-react";
 
-const OrderCart = ({ tableId,orderId }: { tableId: string,orderId:string }) => {
-  const tableNo = tableId;
+const OrderCart = () => {
+  
   const orderCart = useSelector((state: RootState) => state.orderCart);
-  const currentTable = orderCart.find((item) => item.orderId === orderId);
+  //const currentTable = orderCart.find((item) => item.orderId === orderId);
   const dispatch = useDispatch();
   const {mutateAsync:createOrder,isLoading}= useCreateOrder({
     onSuccess:()=>{
       alert('order created')
-      dispatch(clearCart({ tableId: tableNo }))
+      dispatch(clearCart())
     },
     onError:()=>{
       alert('error')
@@ -26,7 +26,7 @@ const OrderCart = ({ tableId,orderId }: { tableId: string,orderId:string }) => {
   const onSubmit=handleSubmit(async(data)=>{
     try{
       await createOrder({
-        orderItems:currentTable?.orderItems ? currentTable.orderItems.map((item)=>({
+        orderItems:orderCart ? orderCart.map((item)=>({
           productId:item.id,
           status:"PROCESSING",
           quantity:item.quantity
@@ -58,18 +58,18 @@ const OrderCart = ({ tableId,orderId }: { tableId: string,orderId:string }) => {
         Order Details
       </span>
       <span
-        onClick={() => dispatch(clearCart({ tableId: tableNo }))}
+        onClick={() => dispatch(clearCart())}
         className="text-[14px] font-[500] leading-[21px] mb-[30px] cursor-pointer text-red-600"
       >
         Clear cart
       </span>
       <div className="flex w-full flex-col hover:overflow-y-auto overflow-y-hidden custom-scrollbar">
-        {currentTable?.orderItems?.map((item) => (
+        {orderCart?.map((item) => (
           <div className="flex w-full flex-col" key={item.id}>
-            <OrderCartDetail item={item} tableId={tableNo} orderId={orderId} />
+            <OrderCartDetail item={item}  />
           </div>
         ))}
-        {(currentTable?.orderItems ?? []).length <= 0 && (
+        {(orderCart ?? []).length <= 0 && (
           <>
             <div className="flex w-full items-center justify-center h-[200px] text-gray-400 italic">
               No items in cart

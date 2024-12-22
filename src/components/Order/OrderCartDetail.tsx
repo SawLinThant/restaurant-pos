@@ -4,7 +4,7 @@ import PlusIcon from "../icons/plus";
 import { useDispatch } from "react-redux";
 import { updateCartItemQuantity } from "@/store/slices/orderCartSlice";
 
-const OrderCartDetail = ({ item,tableId,orderId }: { item: OrderItemProps,tableId:string,orderId:string }) => {
+const OrderCartDetail = ({ item }: { item: OrderItemProps }) => {
   const dispatch = useDispatch();
   return (
     <div className="flex w-full flex-col">
@@ -22,22 +22,18 @@ const OrderCartDetail = ({ item,tableId,orderId }: { item: OrderItemProps,tableI
           <div className="flex w-full items-center justify-start gap-x-[20px]">
             <div
               onClick={() => {
-                if(item.quantity>1){
+                if (item.quantity > 1) {
                   dispatch(
                     updateCartItemQuantity({
-                      tableId: tableId,
                       cartItemId: item.id,
-                      orderId:orderId,
+
                       quantity: item.quantity - 1,
                     })
                   );
-                }
-                else{
+                } else {
                   dispatch(
                     removeFromCart({
-                      tableId: tableId,
                       cartItemId: item.id,
-                      orderId:orderId,
                     })
                   );
                 }
@@ -51,8 +47,6 @@ const OrderCartDetail = ({ item,tableId,orderId }: { item: OrderItemProps,tableI
               onClick={() => {
                 dispatch(
                   updateCartItemQuantity({
-                    tableId: tableId,
-                    orderId:orderId,
                     cartItemId: item.id,
                     quantity: item.quantity + 1,
                   })

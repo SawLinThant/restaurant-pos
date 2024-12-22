@@ -14,18 +14,12 @@ import clsx from "clsx";
 
 interface DishCardProps {
   product: Product;
-  tableNo: string;
-  orderId:string;
 }
 
-const DishCard = ({ product, tableNo,orderId }: DishCardProps) => {
+const DishCard = ({ product }: DishCardProps) => {
   const cart = useSelector((state: RootState) => state.orderCart);
-  console.log("orderId:",orderId)
-  console.log(cart.find((item) => item.orderId === orderId)?.orderItems);
-  const quantity =
-    cart
-      .find((item) => item.orderId === orderId)
-      ?.orderItems?.find((item) => item.id === product.id)?.quantity ?? 0;
+
+  const quantity = cart.find((item) => item.id === product.id)?.quantity || 0;
   const dispatch = useDispatch();
   return (
     <div
@@ -85,8 +79,6 @@ const DishCard = ({ product, tableNo,orderId }: DishCardProps) => {
                 if (quantity > 1) {
                   dispatch(
                     updateCartItemQuantity({
-                      tableId: tableNo,
-                      orderId:orderId,
                       cartItemId: product.id,
                       quantity: quantity - 1,
                     })
@@ -94,8 +86,6 @@ const DishCard = ({ product, tableNo,orderId }: DishCardProps) => {
                 } else {
                   dispatch(
                     removeFromCart({
-                      tableId: tableNo,
-                      orderId:orderId,
                       cartItemId: product.id,
                     })
                   );
@@ -111,8 +101,6 @@ const DishCard = ({ product, tableNo,orderId }: DishCardProps) => {
                 if (quantity > 0) {
                   dispatch(
                     updateCartItemQuantity({
-                      tableId: tableNo,
-                      orderId:orderId,
                       cartItemId: product.id,
                       quantity: quantity + 1,
                     })
@@ -120,15 +108,14 @@ const DishCard = ({ product, tableNo,orderId }: DishCardProps) => {
                 } else {
                   dispatch(
                     addToCart({
-                      tableId: tableNo,
-                      orderId:orderId,
-                      cartItem: {
-                        id: product.id,
-                        name: product.name,
-                        price: product.price,
-                        image: product.image,
-                        quantity: 1,
-                      },
+                      // tableId: tableNo,
+                      // orderId: orderId,
+
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      image: product.image,
+                      quantity: 1,
                     })
                   );
                 }

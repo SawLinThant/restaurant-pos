@@ -35,7 +35,7 @@ function SelectTable({ setSelectedTable, tableList }: SelectTableProps) {
   return (
     <>
       <Dialog>
-        <DialogTrigger className="p-0 border-0">
+        <DialogTrigger className="p-0 border-0 flex items-center justify-center bg-transparent">
           <AddMenuIcon />
         </DialogTrigger>
         <DialogContent className=" flex flex-col w-full sm:w-[50vw] items-start justify-center">
