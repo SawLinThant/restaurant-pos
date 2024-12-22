@@ -1,11 +1,8 @@
-import {
-  OrderItemProps,
-  removeFromCart,
-  updateCartItemQuantity,
-} from "@/store/slices/orderCartSlice";
+import { OrderItemProps, removeFromCart } from "@/store/slices/orderCartSlice";
 import MinusIcon from "../icons/minus";
 import PlusIcon from "../icons/plus";
 import { useDispatch } from "react-redux";
+import { updateCartItemQuantity } from "@/store/slices/orderCartSlice";
 
 const OrderCartDetail = ({ item }: { item: OrderItemProps }) => {
   const dispatch = useDispatch();
@@ -28,12 +25,17 @@ const OrderCartDetail = ({ item }: { item: OrderItemProps }) => {
                 if (item.quantity > 1) {
                   dispatch(
                     updateCartItemQuantity({
-                      id: item.id,
+                      cartItemId: item.id,
+
                       quantity: item.quantity - 1,
                     })
                   );
                 } else {
-                  dispatch(removeFromCart(item.id));
+                  dispatch(
+                    removeFromCart({
+                      cartItemId: item.id,
+                    })
+                  );
                 }
               }}
               className="rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center"
@@ -42,14 +44,14 @@ const OrderCartDetail = ({ item }: { item: OrderItemProps }) => {
             </div>
             <span>{item.quantity}</span>
             <div
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   updateCartItemQuantity({
-                    id: item.id,
+                    cartItemId: item.id,
                     quantity: item.quantity + 1,
                   })
-                )
-              }
+                );
+              }}
               className="rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center"
             >
               <PlusIcon />

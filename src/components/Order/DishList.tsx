@@ -17,7 +17,7 @@ const DishList = () => {
       refetchOnWindowFocus: false,
     }
   );
-  console.log(menuList?.data?.products);
+  
 
   // Handle loading state
   // if (isLoading) {
@@ -42,15 +42,15 @@ const DishList = () => {
   }
 
   // Handle case when data is undefined
-  if (!menuList?.data) {
-    return (
-      <div className="flex w-full flex-col">
-        <span className="mb-[30px] text-[25px] font-[500] leading-[30px]">
-          No menu items available
-        </span>
-      </div>
-    );
-  }
+  // if (!menuList?.data) {
+  //   return (
+  //     <div className="flex w-full flex-col">
+  //       <span className="mb-[30px] text-[25px] font-[500] leading-[30px]">
+  //         No menu items available
+  //       </span>
+  //     </div>
+  //   );
+  // }
 
   // const { mutate: createOrder } = useCreateOrder({
   //   onSuccess: () => {
@@ -72,14 +72,27 @@ const DishList = () => {
       <span className="mb-[30px] text-[25px] font-[500] leading-[30px]">
         Menu
       </span>
-      <div className="sm:grid md:grid lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 md:grid-cols-2 gap-y-[20px] gap-x-[20px] flex w-full flex-col">
+      {/* <div className="sm:grid md:grid lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 md:grid-cols-2 gap-y-[20px] gap-x-[20px] flex w-full flex-col">
         {isLoading && <div>Loading...</div>}
         {!isLoading && menuList?.data?.products.length > 0 ? (
           menuList?.data?.products.map((product: Product) => (
-            <DishCard product={product} />
+            <div key={product.id}>
+              <DishCard product={product} tableNo={tableNo} />
+            </div>
           ))
         ) : (
           <div>No menu items available</div>
+        )} */}
+      <div className="sm:flex-row flex-wrap flex-1 flex-grow gap-y-[20px] gap-x-[20px] flex w-full flex-col">
+        {isLoading && <div>Loading...</div>}
+        {!isLoading && menuList?.data?.products.length > 0 ? (
+          menuList?.data?.products.map((product: Product) => (
+            <div key={product.id}>
+              <DishCard product={product}  />
+            </div>
+          ))
+        ) : (
+          <>{!isLoading && <div>No menu items available</div>}</>
         )}
       </div>
     </div>

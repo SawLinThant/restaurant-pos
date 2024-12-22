@@ -7,47 +7,55 @@ export interface OrderItemProps {
   quantity: number;
   image: string;
 }
-export interface OrderCartProps {
-  cartItems: OrderItemProps[];
-}
 
-const initialState: OrderCartProps = {
-  cartItems: localStorage.getItem("cartItems")
-    ? JSON.parse(localStorage.getItem("cartItems") || "")
-    : [],
-};
+const initialState: OrderItemProps[] = []
 
 export const orderCartSlice = createSlice({
   name: "orderCart",
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      const item = state.cartItems.find((item) => item.id === action.payload.id);
-      if (item) {
-        item.quantity += 1;
+      console.log("addtoCart",action.payload)
+      // Find if item exists for this order
+      const existingItem = state.find((item) => item.id === action.payload.id);
+
+      if (existingItem) {
+        // Item exists, increment quantity
+        existingItem.quantity += 1;
       } else {
-        state.cartItems.push(action.payload);
+        // Add new item
+        state.push({
+          id: action.payload.id,
+          name: action.payload.name,
+          price: action.payload.price,
+          quantity: action.payload.quantity,
+          image: action.payload.image,
+        });
       }
-      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      //localStorage.setItem("orderCart", JSON.stringify(state));
     },
     removeFromCart: (state, action) => {
-      state.cartItems = state.cartItems.filter(
-        (item) => item.id !== action.payload
+      // Filter out the target item
+      const newState = state.filter(
+        (item) => !(item.id === action.payload.cartItemId)
       );
-      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      //localStorage.setItem('orderCart', JSON.stringify(newState));
+      return newState;
     },
-    clearCart: (state) => {
-      state.cartItems = [];
-      localStorage.removeItem("cartItems");
+    clearCart: () => {
+      // Remove all items for this order
+      return []
+      //localStorage.setItem('orderCart', JSON.stringify(newState));
     },
     updateCartItemQuantity: (state, action) => {
-      const { id, quantity } = action.payload;
-      const item = state.cartItems.find((item) => item.id === id);
-      if (item) {
-        state.cartItems = state.cartItems.map((item) =>
-          item.id === id ? { ...item, quantity: quantity } : item
-        );
-        localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      // Find and update target item
+      const existingItem = state.find(
+        (item) => item.id === action.payload.cartItemId
+      );
+
+      if (existingItem) {
+        existingItem.quantity = action.payload.quantity;
+        //localStorage.setItem('orderCart', JSON.stringify(state));
       }
     },
   },

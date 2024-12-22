@@ -2,12 +2,19 @@ import { baseUrl } from "@/lib/constants/config";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import axios from "axios";
 
-interface CreateOrderPayload {
-  // Your order properties
+export interface OrderItem {
   productId: string;
+  status: string;
   quantity: number;
-  // ... other properties
 }
+
+export interface Order {
+  orderItems: OrderItem[];
+  table: string;
+  status: string;
+}
+
+
 
 interface CreateOrderResponse {
   // Your response properties
@@ -17,12 +24,12 @@ interface CreateOrderResponse {
 
 // Define the options type
 type CreateOrderOptions = Omit<
-  UseMutationOptions<CreateOrderResponse, Error, CreateOrderPayload>,
-  'mutationFn'
+  UseMutationOptions<CreateOrderResponse, Error, Order>,
+  "mutationFn"
 >;
 
 export const useCreateOrder = (options?: CreateOrderOptions) => {
-  return useMutation<CreateOrderResponse, Error, CreateOrderPayload>({
+  return useMutation<CreateOrderResponse, Error, Order>({
     mutationFn: async (orderData) => {
       const response = await axios.post<CreateOrderResponse>(
         `${baseUrl}/Order/create`,
