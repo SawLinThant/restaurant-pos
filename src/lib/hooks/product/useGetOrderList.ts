@@ -1,9 +1,10 @@
+import { BaseResponseSchema } from "@/lib/type/BaseresponseShcema";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { baseUrl } from "../constants/config";
-import { BaseResponseSchema } from "../type/BaseresponseShcema";
-import { Order } from "./useCreateOreder";
-import { ApiError } from "../type/ApiErrorResponse";
+import { Order } from "../order/useCreateOreder";
+import { ApiError } from "@/lib/type/ApiErrorResponse";
+import { baseUrl } from "@/lib/constants/config";
+
 // Adjust this import path based on where your getOrderList function is defined
 
 interface OrderListResponse

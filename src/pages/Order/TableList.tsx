@@ -1,6 +1,7 @@
 import SelectTable, { TableProps } from "@/components/Order/SelectTable";
 import OrderCard from "@/components/Order/TableCard";
-import { useGetOrderList } from "@/lib/hooks/useGetOrderList";
+import { useGetOrderList } from "@/lib/hooks/product/useGetOrderList";
+
 import { useState } from "react";
 
 const tableList: TableProps[] = [

@@ -2,54 +2,58 @@ import { useDispatch, useSelector } from "react-redux";
 import OrderCartDetail from "./OrderCartDetail";
 import { RootState } from "@/store/store";
 import { clearCart } from "@/store/slices/orderCartSlice";
-import { useCreateOrder } from "@/lib/hooks/useCreateOreder";
 import { useForm } from "react-hook-form";
 import { Loader } from "lucide-react";
+import { useCreateOrder } from "@/lib/hooks/order/useCreateOreder";
 
 const OrderCart = () => {
-  
   const orderCart = useSelector((state: RootState) => state.orderCart);
   //const currentTable = orderCart.find((item) => item.orderId === orderId);
   const dispatch = useDispatch();
-  const {mutateAsync:createOrder,isLoading}= useCreateOrder({
-    onSuccess:()=>{
-      alert('order created')
-      dispatch(clearCart())
+  const { mutateAsync: createOrder, isLoading } = useCreateOrder({
+    onSuccess: () => {
+      alert("order created");
+      dispatch(clearCart());
     },
-    onError:()=>{
-      alert('error')
-    }
-  })
- 
-  const {handleSubmit,register}= useForm<{table:string}>()
+    onError: () => {
+      alert("error");
+    },
+  });
 
-  const onSubmit=handleSubmit(async(data)=>{
-    try{
+  const { handleSubmit, register } = useForm<{ table: string }>();
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
       await createOrder({
-        orderItems:orderCart ? orderCart.map((item)=>({
-          productId:item.id,
-          status:"PROCESSING",
-          quantity:item.quantity
-        })) : [],
-        table:data.table,
-        status:'PROCESSING'
-      })
-    }catch(error){
-      console.log(error)
+        orderItems: orderCart
+          ? orderCart.map((item) => ({
+              productId: item.id,
+              status: "PROCESSING",
+              quantity: item.quantity,
+            }))
+          : [],
+        table: data.table,
+        status: "PROCESSING",
+      });
+    } catch (error) {
+      console.log(error);
     }
-  })
+  });
   // function calcilateSubTotoal(){
   //   return currentTable?.orderItems.reduce((prevValue,currentValue)=>{
   //     return prevValue + currentValue.price * currentValue.quantity
   //   },0).toString()
   // }
   return (
-    <form onSubmit={onSubmit} className="flex w-full flex-col shadow-OrderCartShadow px-[25px] h-[calc(100dvh)] pt-[20px] pb-[30px] ">
+    <form
+      onSubmit={onSubmit}
+      className="flex w-full flex-col shadow-OrderCartShadow px-[25px] h-[calc(100dvh)] pt-[20px] pb-[30px] "
+    >
       <span className="mb-[30px] text-[18px] font-[500] leading-[21px]">
         Customer Information
       </span>
       <input
-        {...register('table',{required:true})}
+        {...register("table", { required: true })}
         className="flex w-full bg-[#F1F1F1] py-[10px] px-[20px] rounded-[100px]"
         placeholder="Table Number"
       />
@@ -66,7 +70,7 @@ const OrderCart = () => {
       <div className="flex w-full flex-col hover:overflow-y-auto overflow-y-hidden custom-scrollbar">
         {orderCart?.map((item) => (
           <div className="flex w-full flex-col" key={item.id}>
-            <OrderCartDetail item={item}  />
+            <OrderCartDetail item={item} />
           </div>
         ))}
         {(orderCart ?? []).length <= 0 && (
@@ -100,8 +104,17 @@ const OrderCart = () => {
             </div>
           </div>
           <div className="flex w-full mt-[30px]">
-            <button type="submit" className="flex w-full items-center justify-center text-white font-[500] bg-[#009258]">
-              {isLoading ? <><Loader className="animate-spin" /> Order</> : 'Order'}
+            <button
+              type="submit"
+              className="flex w-full items-center justify-center text-white font-[500] bg-[#009258]"
+            >
+              {isLoading ? (
+                <>
+                  <Loader className="animate-spin" /> Order
+                </>
+              ) : (
+                "Order"
+              )}
             </button>
           </div>
         </div>
