@@ -1,4 +1,4 @@
-import { OrderResponse } from "@/lib/type/CommonType";
+import { OrderItem, OrderResponse } from "@/lib/type/CommonType";
 import { Loader, X } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -6,29 +6,47 @@ import { CustomSelect } from "../select";
 import { Button } from "@/components/ui/button";
 import { OrderStatus } from "@/lib/constants/MenuOptions";
 import { useUpdateOrder } from "@/lib/hooks/order/useUpdateProduct";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import MinusIcon from "@/components/icons/minus";
+import PlusIcon from "@/components/icons/plus";
+import clsx from "clsx";
 
 const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
   const navigate = useNavigate();
-  const {orderId} = useParams();
-  const [orderStatus,setOrderStatus] = useState<string>("")
-  const {mutate:updateOrder, isLoading:updateLoading} = useUpdateOrder({
-    onSuccess:() => {
-        console.log("updated status successfully")
+  const { orderId } = useParams();
+  const [orderStatus, setOrderStatus] = useState<string>("");
+  const [orderItems,setOrderItems] = useState<OrderItem[]>([])
+  const { mutate: updateOrder, isLoading: updateLoading } = useUpdateOrder({
+    onSuccess: () => {
+      console.log("updated status successfully");
     },
-    onError:(err) => {
-        console.log("Failed to update order:", err);
+    onError: (err) => {
+      console.log("Failed to update order:", err);
     },
   });
   const handleUpdateOrder = () => {
-    updateOrder(
-      {
-        payload: { status: orderStatus }, 
-        params: { id: orderId as string },
-    },
-    
-  );
+    updateOrder({
+      payload: { status: orderStatus },
+      params: { id: orderId as string },
+    });
   };
+
+  useEffect(() => {
+    setOrderItems(data?.data.orderItems || []);
+  }, [data]);
+
+  function handleOrderItemQuantity(orderItemId:string,type:"increment" | "decrement"){
+    if(orderItems.length > 0){
+      const updatedOrderItems = orderItems.map((item) => {
+        if (item.Id === orderItemId) {
+          return { ...item, quantity: type === "increment" ? item.quantity + 1 : item.quantity - 1 };
+        }
+        return item;
+      });
+      setOrderItems(updatedOrderItems);
+    }
+  }
+
   const date = new Date(data?.data.createdDate || Date.now());
   const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString(
     [],
@@ -40,9 +58,9 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
     }, 0) || 0;
   const tax = subTotalPrice * 0;
   const totalPrice = subTotalPrice + tax;
-  console.log(orderStatus)
+  console.log(orderStatus);
   return (
-    <div className="w-full h-full flex items-start justify-center">
+    <div className="w-full h-[90dvh] py-4 overflow-y-auto overflow-x-hidden flex items-start justify-center">
       <ToastContainer autoClose={3000} position="top-center" />
       <div className="w-full flex flex-col gap-4 border border-gray-300  rounded-md lg:p-8 md:p-6 p-2 lg:w-[60vw] max-w-[900px] md:w-[90vw] mt-2">
         <div className="w-full flex flex-col gap-4">
@@ -61,7 +79,9 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
               Table No {data?.data.table}
             </h3>
             <div className="text-sm">
-              <span className="p-2 rounded bg-secondary text-white">{data?.data.status}</span>
+              <span className="p-2 rounded bg-secondary text-white">
+                {data?.data.status}
+              </span>
             </div>
           </div>
         </div>
@@ -81,7 +101,29 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
                     </div>
                     <span>Menu name</span>
                   </div>
-
+                  <div className="flex w-full items-center justify-center gap-x-[20px]">
+                    <div
+                      onClick={() => {
+                        if(orderItems.find(item => item.Id === orderItem.Id)?.quantity || 0  >= 1){
+                          handleOrderItemQuantity(orderItem.Id,"decrement")
+                        }
+                      }}
+                      className={clsx("rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center",{
+                        "bg-[#00000080]":(orderItems.find(item => item.Id === orderItem.Id)?.quantity || 0) < 1
+                      })}
+                    >
+                      <MinusIcon />
+                    </div>
+                    <span>{orderItems.find(item => item.Id === orderItem.Id)?.quantity}</span>
+                    <div
+                      onClick={() => {
+                        handleOrderItemQuantity(orderItem.Id,"increment")
+                      }}
+                      className="rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center"
+                    >
+                      <PlusIcon />
+                    </div>
+                  </div>
                   <div className="min-h-32 min-w-32 flex flex-row items-center justify-center">
                     <span>{orderItem.quantity}</span>
                     <span>x</span>
@@ -97,9 +139,17 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
         </div>
         <div className="w-full flex flex-row justify-between">
           <div className="w-[150px] flex flex-col gap-3">
-            <CustomSelect setOptions={setOrderStatus} label="Select Status" options={OrderStatus} />
-            <Button disabled={updateLoading} onClick={handleUpdateOrder} className="border bg-secondary rounded-md h-11 w-full hover:border-gray-600 hover:text-black flex items-center justify-center">
-              {updateLoading?(<Loader className="animate-spin"/>):"Save"}
+            <CustomSelect
+              setOptions={setOrderStatus}
+              label="Select Status"
+              options={OrderStatus}
+            />
+            <Button
+              disabled={updateLoading}
+              onClick={handleUpdateOrder}
+              className="border bg-secondary rounded-md h-11 w-full hover:border-gray-600 hover:text-black flex items-center justify-center"
+            >
+              {updateLoading ? <Loader className="animate-spin" /> : "Save"}
             </Button>
           </div>
           <div className="min-w-[22rem] min-h-[10rem] p-6 bg-[#F1F1F1] rounded-md">
