@@ -20,7 +20,7 @@ function TableList() {
   return (
     <div className="flex w-full flex-col gap-[20px] px-[30px] py-[20px] h-[90dvh] overflow-y-auto overflow-x-hidden">
       {!isLoading && orderList?.data.orders.map((order) => (
-        <OrderCard table={order.table} orderId={order.Id} key={order.Id+Date.now().toString()} status={order.status}/>
+        <OrderCard table={order.table || ""} orderId={order.Id || ""} key={order.Id+Date.now().toString()} status={order.status || ""} totalItems={order.orderItems ? order.orderItems.length : 0}/>
       ))}
       <div className="fixed right-[30px] bottom-[40%] w-[60px] h-[60px]">
         <SelectTable

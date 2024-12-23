@@ -5,9 +5,10 @@ export interface TableCardProps {
   table: string;
   orderId: string;
   status: string;
+  totalItems: number;
 }
 
-function OrderCard({ table, orderId, status }: TableCardProps) {
+function OrderCard({ table, orderId, status, totalItems }: TableCardProps) {
   const navigate = useNavigate();
   return (
     <div
@@ -29,7 +30,7 @@ function OrderCard({ table, orderId, status }: TableCardProps) {
         </div>
       </div>
       <div className="flex w-full items-center justify-center text-[18px] font-[500] text-black leading-[21px]">
-        {"3 Items"}
+        {`${totalItems} Items`}
       </div>
       <div className="flex w-full items-center justify-end gap-x-[65px] pr-[30px]">
         <span className="text-[#00000080] text-[16px] font-[500]">
