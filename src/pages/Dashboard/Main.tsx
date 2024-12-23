@@ -14,11 +14,11 @@ import { Route, Routes } from "react-router-dom";
 
 const MainScreen = () => {
   return (
-    <div className="w-screen h-screen overflow-hidden p-4 flex flex-row gap-4 items-center">
+    <div className="w-screen h-screen overflow-auto p-4 flex flex-row gap-4 items-center">
       <Sidebar />
       <div className="w-full h-full flex flex-col">
         <MobileNav />
-        <div className="w-full h-[97vh] overflow-y-auto flex items-center justify-center p-4">
+        <div className="w-full h-[97vh]  flex items-center justify-center p-4">
           <div className="w-full h-full ">
             <Routes>
               <Route path="*" element={<Overview />} />

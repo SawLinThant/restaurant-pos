@@ -70,7 +70,7 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
             data.data.orderItems &&
             data?.data.orderItems.map((orderItem) => (
               <div className="w-full border-b border-gray-400 py-4">
-                <div className="w-full h-full flex flex-row justify-between">
+                <div className="w-full h-full flex lg:flex-row md:flex-row flex-col justify-between">
                   <div className="flex flex-row gap-3 items-center">
                     <div className="max-h-32 max-w-32">
                       <img
@@ -102,7 +102,7 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
               {updateLoading?(<Loader className="animate-spin"/>):"Save"}
             </Button>
           </div>
-          <div className="min-w-[22rem] min-h-[10rem] p-6 bg-[#F1F1F1] rounded-md lg:order-none md:order-none order-1">
+          <div className="lg:min-w-[22rem] md:min-w-[22rem] w-full min-h-[10rem] p-6 bg-[#F1F1F1] rounded-md lg:order-none md:order-none order-1">
             <div className="w-full h-full flex flex-col gap-2">
               <div className="w-full flex flex-row justify-between">
                 <span className="font-semibold">Subtotal</span>

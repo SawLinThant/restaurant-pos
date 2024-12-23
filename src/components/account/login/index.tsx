@@ -44,7 +44,7 @@ const LoginForm : React.FC = () => {
   return (
     <section className="w-[100vw] h-[100vh] flex items-center justify-center">
       <ToastContainer position="top-center" autoClose={3000}/>
-      <div className="lg:w-[30vw] md:w-[60vw] w-[95%] min-h-[40vh] flex flex-col lg:gap-8 md:gap-8 gap-4 sm:mb-10">
+      <div className="lg:w-[30vw] md:w-[60vw] w-[95%] min-h-[40vh] flex flex-col lg:gap-8 md:gap-8 gap-4 -translate-y-20 lg:translate-y-0 md:translate-y-0">
         <h2 className="w-full text-center font-semibold text-2xl">Login</h2>
         <div className="w-full h-full flex items-center px-2 lg:py-12 md:py-12 py-6 justify-center rounded-md lg:border md:border lg:shadow-lg md:shadow-lg">
           <div className="lg:w-3/4 md:h-3/4 w-[90%] h-3/4">

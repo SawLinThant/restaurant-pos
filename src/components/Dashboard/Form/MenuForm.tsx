@@ -77,7 +77,7 @@ const MenuForm = () => {
   return (
     <div className="w-full h-full flex items-start justify-center">
       <ToastContainer position="top-center" autoClose={3000} />
-      <div className="w-[50vw] min-h-[40vh] p-8 mt-10 border-2 rounded-[40px]">
+      <div className="lg:w-[50vw] md:w-[50vw] w-full min-h-[40vh] p-8 mt-10 border-2 rounded-[40px]">
         <div className="w-full h-full flex flex-col gap-8">
           <div>
             <h2 className="font-semibold text-xl">Create Menu</h2>
@@ -88,8 +88,8 @@ const MenuForm = () => {
               action=""
               className="flex flex-col gap-8"
             >
-              <div className="w-full grid grid-cols-2">
-                <div className="w-full flex flex-col pr-6 gap-4 border-r border-gray-300">
+              <div className="w-full grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4">
+                <div className="w-full flex flex-col lg:pr-6 md:pr-6 pr0 gap-4 lg:border-r md:border-r border-none border-gray-300">
                   <div className="w-full flex flex-col gap-2 items-start justify-start">
                     <label htmlFor="">Name</label>
                     <Input
@@ -119,7 +119,7 @@ const MenuForm = () => {
                     />
                   </div>
                 </div>
-                <div className="w-full flex flex-col pl-6 gap-4">
+                <div className="w-full flex flex-col lg:pl-6 md:pl-6 pl-0 gap-4">
                   <div className="w-full flex flex-col gap-2 items-start justify-start">
                     <label htmlFor="">Description</label>
                     <Textarea

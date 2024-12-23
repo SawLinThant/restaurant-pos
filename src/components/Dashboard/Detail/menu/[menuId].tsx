@@ -109,7 +109,7 @@ const MenuDetail = () => {
   }, [menuId]);
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <div className="w-full h-full flex items-center justify-center ">
       <ToastContainer autoClose={3000} position="top-center"/>
       <div className="w-full flex flex-col gap-4 border border-gray-300  rounded-md p-6 lg:w-[60vw] max-w-[900px] md:w-[90vw]">
         <div className="w-full px-4 flex flex-row items-center justify-end">
@@ -138,13 +138,13 @@ const MenuDetail = () => {
                 <SkeletonProductDetail />
               </div>
             ) : (
-              <div className="w-full h-full flex flex-col py-4 px-6 justify-between gap-4">
+              <div className="w-full h-full flex flex-col py-4 lg:px-6 md:px-6 justify-between gap-4">
                 <div>
                   <div className="w-full flex flex-col gap-4">
                     <div className="w-full py-4 border-b">
                       <h1 className="font-semibold text-2xl">Menu Detail</h1>
                     </div>
-                    <div className="w-full grid grid-cols-3">
+                    <div className="w-full grid grid-cols-3 gap-x-3">
                       <div className="w-full h-full flex flex-row items-center col-span-1 text-start font-semibold">
                         Name:
                       </div>
