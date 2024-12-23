@@ -10,12 +10,14 @@ import { useEffect, useState } from "react";
 import MinusIcon from "@/components/icons/minus";
 import PlusIcon from "@/components/icons/plus";
 import clsx from "clsx";
+import { useUpdateOrderItem } from "@/lib/hooks/order/useUpdateOrderItem";
+import { OrderDto } from "@/lib/hooks/order/dto";
 
 const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
   const navigate = useNavigate();
   const { orderId } = useParams();
   const [orderStatus, setOrderStatus] = useState<string>("");
-  const [orderItems,setOrderItems] = useState<OrderItem[]>([])
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const { mutate: updateOrder, isLoading: updateLoading } = useUpdateOrder({
     onSuccess: () => {
       console.log("updated status successfully");
@@ -24,9 +26,34 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
       console.log("Failed to update order:", err);
     },
   });
+  const { mutate: updateOrderItem, isLoading: updateOrderItemLoading } =
+    useUpdateOrderItem({
+      onSuccess: () => {
+        console.log("updated order item successfully");
+      },
+      onError: (err) => {
+        console.log("Failed to update order item:", err);
+      },
+    });
   const handleUpdateOrder = () => {
     updateOrder({
       payload: { status: orderStatus },
+      params: { id: orderId as string },
+    });
+  };
+
+  const handleUpdateOrderItem = () => {
+    const orderDto: OrderDto = {
+      orderItems: orderItems.map((item) => ({
+        productId: item.productId,
+        status: item.status,
+        quantity: item.quantity,
+      })),
+      table: data?.data.table || "",
+      status: data?.data.status || "",
+    };
+    updateOrderItem({
+      payload: orderDto,
       params: { id: orderId as string },
     });
   };
@@ -35,11 +62,18 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
     setOrderItems(data?.data.orderItems || []);
   }, [data]);
 
-  function handleOrderItemQuantity(orderItemId:string,type:"increment" | "decrement"){
-    if(orderItems.length > 0){
+  function handleOrderItemQuantity(
+    orderItemId: string,
+    type: "increment" | "decrement"
+  ) {
+    if (orderItems.length > 0) {
       const updatedOrderItems = orderItems.map((item) => {
         if (item.Id === orderItemId) {
-          return { ...item, quantity: type === "increment" ? item.quantity + 1 : item.quantity - 1 };
+          return {
+            ...item,
+            quantity:
+              type === "increment" ? item.quantity + 1 : item.quantity - 1,
+          };
         }
         return item;
       });
@@ -104,20 +138,34 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
                   <div className="flex w-full items-center justify-center gap-x-[20px]">
                     <div
                       onClick={() => {
-                        if(orderItems.find(item => item.Id === orderItem.Id)?.quantity || 0  >= 1){
-                          handleOrderItemQuantity(orderItem.Id,"decrement")
+                        if (
+                          orderItems.find((item) => item.Id === orderItem.Id)
+                            ?.quantity ||
+                          0 >= 1
+                        ) {
+                          handleOrderItemQuantity(orderItem.Id, "decrement");
                         }
                       }}
-                      className={clsx("rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center",{
-                        "bg-[#00000080]":(orderItems.find(item => item.Id === orderItem.Id)?.quantity || 0) < 1
-                      })}
+                      className={clsx(
+                        "rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center",
+                        {
+                          "bg-[#00000080]":
+                            (orderItems.find((item) => item.Id === orderItem.Id)
+                              ?.quantity || 0) < 1,
+                        }
+                      )}
                     >
                       <MinusIcon />
                     </div>
-                    <span>{orderItems.find(item => item.Id === orderItem.Id)?.quantity}</span>
+                    <span>
+                      {
+                        orderItems.find((item) => item.Id === orderItem.Id)
+                          ?.quantity
+                      }
+                    </span>
                     <div
                       onClick={() => {
-                        handleOrderItemQuantity(orderItem.Id,"increment")
+                        handleOrderItemQuantity(orderItem.Id, "increment");
                       }}
                       className="rounded-full flex  bg-[#009258] w-[40px] h-[40px] items-center justify-center"
                     >
@@ -150,6 +198,19 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
               className="border bg-secondary rounded-md h-11 w-full hover:border-gray-600 hover:text-black flex items-center justify-center"
             >
               {updateLoading ? <Loader className="animate-spin" /> : "Save"}
+            </Button>
+          </div>
+          <div className="w-[150px] flex flex-col gap-3">
+            <Button
+              disabled={updateOrderItemLoading}
+              onClick={handleUpdateOrderItem}
+              className="border bg-secondary rounded-md h-11 w-full hover:border-gray-600 hover:text-black flex items-center justify-center"
+            >
+              {updateOrderItemLoading ? (
+                <Loader className="animate-spin" />
+              ) : (
+                "Update Order Items"
+              )}
             </Button>
           </div>
           <div className="min-w-[22rem] min-h-[10rem] p-6 bg-[#F1F1F1] rounded-md">
