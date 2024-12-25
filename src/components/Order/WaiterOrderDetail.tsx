@@ -2,7 +2,7 @@ import { OrderItem, OrderResponse } from "@/lib/type/CommonType";
 import { Loader, X } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { CustomSelect } from "../select";
+
 import { Button } from "@/components/ui/button";
 import { OrderStatus } from "@/lib/constants/MenuOptions";
 import { useUpdateOrder } from "@/lib/hooks/order/useUpdateProduct";
@@ -12,8 +12,10 @@ import PlusIcon from "@/components/icons/plus";
 import clsx from "clsx";
 import { useUpdateOrderItem } from "@/lib/hooks/order/useUpdateOrderItem";
 import { OrderDto } from "@/lib/hooks/order/dto";
+import { CustomSelect } from "../common/select";
+import AddNewDish from "./AddNewDish";
 
-const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
+const WaiterOrderDetail = ({ data }: { data: OrderResponse | null }) => {
   const navigate = useNavigate();
   const { orderId } = useParams();
   const [orderStatus, setOrderStatus] = useState<string>("");
@@ -46,7 +48,6 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
     const orderDto: OrderDto = {
       orderItems: orderItems.map((item) => ({
         productId: item.productId,
-        // status: item.status,
         Id: item.Id,
         quantity: item.quantity,
       })),
@@ -80,6 +81,12 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
       });
       setOrderItems(updatedOrderItems);
     }
+  }
+
+  function handleRemoveOrderItem(orderItemId: string) {
+    setOrderItems((prev: OrderItem[]) =>
+      prev.filter((item: OrderItem) => item.Id !== orderItemId)
+    );
   }
 
   const date = new Date(data?.data.createdDate || Date.now());
@@ -120,13 +127,16 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
             </div>
           </div>
         </div>
-        <div className="w-full flex flex-col gap-3">
+        <div className="flex w-full justify-end">
+          <AddNewDish menus={orderItems} setMenu={setOrderItems} />
+        </div>
+        <div className="w-full flex flex-col gap-3 relative">
           {data &&
             data.data.orderItems &&
-            data?.data.orderItems.map((orderItem) => (
-              <div className="w-full border-b border-gray-400 py-4">
+            orderItems.map((orderItem) => (
+              <div className="w-full border-b border-gray-400 py-1">
                 <div className="w-full h-full flex flex-row justify-between">
-                  <div className="flex flex-row gap-3 items-center">
+                  <div className="flex flex-row gap-x-3 items-center">
                     <div className="max-h-32 max-w-32">
                       <img
                         src={orderItem.product.image}
@@ -140,11 +150,12 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
                     <div
                       onClick={() => {
                         if (
-                          orderItems.find((item) => item.Id === orderItem.Id)
-                            ?.quantity ||
-                          0 >= 1
+                          (orderItems.find((item) => item.Id === orderItem.Id)
+                            ?.quantity || 0) > 1
                         ) {
                           handleOrderItemQuantity(orderItem.Id, "decrement");
+                        } else {
+                          handleRemoveOrderItem(orderItem.Id);
                         }
                       }}
                       className={clsx(
@@ -237,4 +248,4 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
     </div>
   );
 };
-export default OrderDetail;
+export default WaiterOrderDetail;
