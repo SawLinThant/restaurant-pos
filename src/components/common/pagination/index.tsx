@@ -43,7 +43,7 @@ const Pagination = ({ total_items, itemPerpage,  queryParams }: any) => {
 
   return (
     <div className="flex flex-row gap-4">
-      <button onClick={() => previousBtnHandler()} className="font-bold">
+      <button onClick={() => previousBtnHandler()} className="font-bold bg-secondary text-white">
         Prev
       </button>
       <div className="flex flex-row gap-2 items-center">
@@ -51,7 +51,7 @@ const Pagination = ({ total_items, itemPerpage,  queryParams }: any) => {
         <span>/</span>
         <p className="font-semibold text-lg">{totalPages}</p>
       </div>
-      <button onClick={() => nextBtnHandler()} className="font-bold">
+      <button onClick={() => nextBtnHandler()} className="font-bold bg-secondary text-white">
         Next
       </button>
     </div>

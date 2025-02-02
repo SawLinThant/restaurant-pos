@@ -47,7 +47,7 @@ const StaffDetail = () => {
   return (
     <>
       <ToastContainer autoClose={3000} position="top-center" />
-      <div className="w-full flex items-center justify-center gap-4 overflow-y-auto">
+      <div className="w-full h-full flex items-center justify-center gap-4 mt-[20rem]">
         <div className="lg:w-[90%] md:w-[90%] lg:max-w-[1000px] w-full border border-gray-500 rounded-md p-8 flex flex-col gap-4">
           <div className="w-full h-full flex flex-row items-center justify-end">
             <div onClick={() => navigate(-1)} className="hover:cursor-pointer">

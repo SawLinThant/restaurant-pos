@@ -64,7 +64,7 @@ const Overview = () => {
   }, [baseUrl, token, skip, startDate, endDate]);
 
   return (
-    <div className="w-full h-full flex flex-col gap-4">
+    <div className="w-full h-full flex flex-col gap-4 overflow-y-auto">
       <div className="w-full flex items-center justify-start">
         <h2 className="font-semibold text-2xl">Overview</h2>
       </div>
@@ -109,7 +109,7 @@ const Overview = () => {
           <input
             placeholder="Order ID"
             type="text"
-            className="w-full h-full px-4 pl-10 rounded-md border border-gray-600"
+            className="w-full h-full px-4 pl-10 rounded-md border border-gray-600 bg-white"
           />
           <div className="absolute left-2 top-3 z-10">
             <CiSearch size={25} />

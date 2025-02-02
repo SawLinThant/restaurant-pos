@@ -14,24 +14,22 @@ import { Route, Routes } from "react-router-dom";
 
 const MainScreen = () => {
   return (
-    <div className="w-screen h-screen overflow-auto p-4 flex flex-row gap-4 items-center">
+    <div className="w-screen flex flex-row gap-4 items-center">
       <Sidebar />
-      <div className="w-full h-full flex flex-col">
+      <div className="w-full p-4 h-[100dvh] flex flex-col gap-4 ">
         <MobileNav />
-        <div className="w-full h-[97vh]  flex items-center justify-center p-4">
-          <div className="w-full h-full ">
-            <Routes>
-              <Route path="*" element={<Overview />} />
-              <Route path="staff" element={<Staff />} />
-              <Route path="menu" element={<Menu />} />
-              <Route path="menu/:menuId" element={<MenuDetail />} />
-              <Route path="staff/:staffId" element={<StaffDetail />} />
-              <Route path="order/:orderId" element={<OrderDetail />} />
-              <Route path="menu/createmenu" element={<MenuForm />} />
-              <Route path="staff/createstaff" element={<StaffForm />} />
-              <Route path="order" element={<OrderList />} />
-            </Routes>
-          </div>
+        <div className="w-full h-[80dvh] flex-shrink-0 flex flex-grow items-center overflow-y-auto justify-center p-4">
+          <Routes>
+            <Route path="*" element={<Overview />} />
+            <Route path="staff" element={<Staff />} />
+            <Route path="menu" element={<Menu />} />
+            <Route path="menu/:menuId" element={<MenuDetail />} />
+            <Route path="staff/:staffId" element={<StaffDetail />} />
+            <Route path="order/:orderId" element={<OrderDetail />} />
+            <Route path="menu/createmenu" element={<MenuForm />} />
+            <Route path="staff/createstaff" element={<StaffForm />} />
+            <Route path="order" element={<OrderList />} />
+          </Routes>
         </div>
       </div>
     </div>

@@ -90,7 +90,7 @@ const OrderList = () => {
               setSearchQuery(value);
               handleSearch(value);
             }}
-            className="w-full h-full px-4 pl-10 rounded-md border border-gray-600"
+            className="w-full h-full px-4 pl-10 rounded-md border border-gray-600 dark:bg-white bg-white"
           />
           <div className="absolute left-2 top-3 z-10">
             <CiSearch size={25} />
