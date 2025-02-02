@@ -12,7 +12,7 @@ const OrderManagement = () => {
         <div className="flex w-full justify-end">
           <OrderMenu />
         </div>
-        <div className="flex w-full flex-col px-[10rem]">
+        <div className="flex w-full flex-col items-center justify-center lg:px-[10rem]">
           <MenuOptionBar />
         </div>
         <div className="flex w-full">

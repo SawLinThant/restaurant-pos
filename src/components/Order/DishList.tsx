@@ -83,7 +83,7 @@ const DishList = () => {
         ) : (
           <div>No menu items available</div>
         )} */}
-      <div className="sm:flex-row flex-wrap flex-1 flex-grow gap-y-[20px] gap-x-[20px] flex w-full flex-col">
+      <div className="lg:grid-cols-3 md:grid-cols-2 grid-cols-1 flex-1 pb-[20px] gap-y-[20px] gap-x-[5px] sm:gap-x-[20px] grid w-full flex-col">
         {isLoading && <div>Loading...</div>}
         {!isLoading && menuList?.data?.products.length > 0 ? (
           menuList?.data?.products.map((product: Product) => (

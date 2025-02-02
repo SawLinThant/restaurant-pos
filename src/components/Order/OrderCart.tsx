@@ -27,13 +27,14 @@ const OrderCart = () => {
       await createOrder({
         orderItems: orderCart
           ? orderCart.map((item) => ({
+              Id: item.id,
               productId: item.id,
               status: "PROCESSING",
               quantity: item.quantity,
             }))
           : [],
         table: data.table,
-        status: "PROCESSING",
+        // status: "PROCESSING",
       });
     } catch (error) {
       console.log(error);

@@ -24,7 +24,7 @@ const DishCard = ({ product }: DishCardProps) => {
   return (
     <div
       className={clsx(
-        "flex w-full  min-w-[330px] flex-shrink flex-col bg-[#F6F6F6] rounded-[10px]  pt-[25px] pl-[25px] pr-[15px] pb-[15px]",
+        "flex w-full flex-grow  flex-shrink flex-col bg-[#F6F6F6] rounded-[10px]  pt-[25px] pl-[25px] pr-[15px] pb-[15px]",
         { "border-2 border-[#009258]": quantity > 0 }
       )}
       key={product.id}
@@ -35,10 +35,10 @@ const DishCard = ({ product }: DishCardProps) => {
             src={product.image || "/dishes/steak.jpg"}
             width={256}
             height={128}
-            className="w-[130px] h-[130px] rounded-[10px] object-cover align-top"
+            className="customLg:w-[12.125rem] md:w-[8.125rem] h-[8.125rem] rounded-[10px] object-cover align-top"
           />
         </div>
-        <div className=" w-1/2 flex-col ">
+        <div className=" w-1/2 flex-col sm:pl-[10px] md:pl-0 pl-[10px]">
           <span className="text-[18px] font-[500]">{product.name}</span>
           <div className="text-[11px] font-[500] text-[#00000080] h-[45%] hover:overflow-y-auto overflow-y-hidden custom-scrollbar leading-[15px]">
             {product.description}
