@@ -1,17 +1,51 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { baseUrl } from "../../constants/config";
+import { BaseResponseSchema } from "@/lib/type/BaseresponseShcema";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+
+import { ApiError } from "@/lib/type/ApiErrorResponse";
+import { baseUrl } from "@/lib/constants/config";
+import { OrderResponse } from "@/lib/type/CommonType";
+
 // Adjust this import path based on where your getOrderList function is defined
 
-export const useGetOrderList = (options: any) => {
-  return useQuery({
-    queryKey: ["orderList"],
+interface OrderListResponse
+  extends BaseResponseSchema<{
+    orders: OrderResponse['data'][];
+    totalCount: number;
+  }> {
+  data: {
+    orders: OrderResponse['data'][];
+    totalCount: number;
+  };
+}
+
+type OrderListQueryOptions = Omit<
+  UseQueryOptions<OrderListResponse, AxiosError<ApiError>>,
+  "queryKey" | "queryFn"
+>;
+
+interface PaginationParams {
+  take: number;
+  skip: number;
+}
+
+export const useGetOrderList = (
+  { take, skip }: PaginationParams,
+  options?: OrderListQueryOptions
+) => {
+  return useQuery<OrderListResponse, AxiosError<ApiError>>({
+    queryKey: ["orderList", take, skip],
     queryFn: async () => {
-      const response = await axios.get(`${baseUrl}/Product/get`, {
+      const response = await axios.get(`${baseUrl}/Order/getList`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
+        params: {
+          take,
+          skip,
+        },
       });
+      // console.log("response:",response.data)
       return response.data;
     },
     ...options,

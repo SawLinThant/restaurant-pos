@@ -2,21 +2,59 @@ import { useDispatch, useSelector } from "react-redux";
 import OrderCartDetail from "./OrderCartDetail";
 import { RootState } from "@/store/store";
 import { clearCart } from "@/store/slices/orderCartSlice";
+import { useForm } from "react-hook-form";
+import { Loader } from "lucide-react";
+import { useCreateOrder } from "@/lib/hooks/order/useCreateOreder";
 
 const OrderCart = () => {
-  const { cartItems } = useSelector((state: RootState) => state.orderCart);
+  const orderCart = useSelector((state: RootState) => state.orderCart);
+  //const currentTable = orderCart.find((item) => item.orderId === orderId);
   const dispatch = useDispatch();
-  function calcilateSubTotoal(){
-    return cartItems.reduce((prevValue,currentValue)=>{
-      return prevValue + currentValue.price * currentValue.quantity
-    },0).toString()
-  }
+  const { mutateAsync: createOrder, isLoading } = useCreateOrder({
+    onSuccess: () => {
+      alert("order created");
+      dispatch(clearCart());
+    },
+    onError: () => {
+      alert("error");
+    },
+  });
+
+  const { handleSubmit, register } = useForm<{ table: string }>();
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      await createOrder({
+        orderItems: orderCart
+          ? orderCart.map((item) => ({
+              Id: item.id,
+              productId: item.id,
+              status: "PROCESSING",
+              quantity: item.quantity,
+            }))
+          : [],
+        table: data.table,
+        // status: "PROCESSING",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  // function calcilateSubTotoal(){
+  //   return currentTable?.orderItems.reduce((prevValue,currentValue)=>{
+  //     return prevValue + currentValue.price * currentValue.quantity
+  //   },0).toString()
+  // }
   return (
-    <div className="flex w-[30rem] flex-col shadow-OrderCartShadow px-[25px] h-[calc(100vh-10vh)] pt-[20px] pb-[30px] ">
+    <form
+      onSubmit={onSubmit}
+      className="flex w-full flex-col shadow-OrderCartShadow px-[25px] h-[calc(100dvh)] pt-[20px] pb-[30px] "
+    >
       <span className="mb-[30px] text-[18px] font-[500] leading-[21px]">
         Customer Information
       </span>
       <input
+        {...register("table", { required: true })}
         className="flex w-full bg-[#F1F1F1] py-[10px] px-[20px] rounded-[100px]"
         placeholder="Table Number"
       />
@@ -31,12 +69,12 @@ const OrderCart = () => {
         Clear cart
       </span>
       <div className="flex w-full flex-col hover:overflow-y-auto overflow-y-hidden custom-scrollbar">
-        {cartItems.map((item) => (
-          <div className="flex w-full flex-col  ">
+        {orderCart?.map((item) => (
+          <div className="flex w-full flex-col" key={item.id}>
             <OrderCartDetail item={item} />
           </div>
         ))}
-        {cartItems.length <= 0 && (
+        {(orderCart ?? []).length <= 0 && (
           <>
             <div className="flex w-full items-center justify-center h-[200px] text-gray-400 italic">
               No items in cart
@@ -49,7 +87,7 @@ const OrderCart = () => {
             <div className="grid grid-cols-2 w-full">
               <span className="text-[#00000080]">Subtotal</span>
               <span className="flex w-full items-end justify-end text-right text-black">
-                {calcilateSubTotoal()} MMk
+                {100000} MMk
               </span>
             </div>
             <div className="grid grid-cols-2 w-full mt-[20px]">
@@ -62,18 +100,27 @@ const OrderCart = () => {
             <div className="grid grid-cols-2 w-full">
               <span className="">Total</span>
               <span className="flex w-full items-end justify-end text-right text-black">
-                {calcilateSubTotoal()} MMk
+                {1000} MMk
               </span>
             </div>
           </div>
           <div className="flex w-full mt-[30px]">
-            <button className="flex w-full items-center justify-center text-white font-[500] bg-[#009258]">
-              Order
+            <button
+              type="submit"
+              className="flex w-full items-center justify-center text-white font-[500] bg-[#009258]"
+            >
+              {isLoading ? (
+                <>
+                  <Loader className="animate-spin" /> Order
+                </>
+              ) : (
+                "Order"
+              )}
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
