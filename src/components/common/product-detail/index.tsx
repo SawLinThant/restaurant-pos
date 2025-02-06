@@ -12,6 +12,7 @@ import PlusIcon from "@/components/icons/plus";
 import clsx from "clsx";
 import { useUpdateOrderItem } from "@/lib/hooks/order/useUpdateOrderItem";
 import { OrderDto } from "@/lib/hooks/order/dto";
+import { PrintPopup } from "../print-popup";
 
 const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
   const navigate = useNavigate();
@@ -119,6 +120,9 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
               </span>
             </div>
           </div>
+          <div className="w-full flex flex-row justify-end mt-4">
+            <PrintPopup/>
+          </div>
         </div>
         <div className="w-full flex flex-col gap-3">
           {data &&
@@ -186,8 +190,9 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
               </div>
             ))}
         </div>
+        
         <div className="w-full flex flex-row justify-between">
-          <div className="w-[150px] flex flex-col gap-3">
+          {/* <div className="w-[150px] flex flex-col gap-3">
             <CustomSelect
               setOptions={setOrderStatus}
               label="Select Status"
@@ -200,7 +205,9 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
             >
               {updateLoading ? <Loader className="animate-spin" /> : "Save"}
             </Button>
-          </div>
+          </div> */}
+      <div className="flex flex-row justify-end">
+          <div className="flex flex-col gap-4">
           <div className="w-[150px] flex flex-col gap-3">
             <Button
               disabled={updateOrderItemLoading}
@@ -214,8 +221,24 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
               )}
             </Button>
           </div>
-          <div className="lg:min-w-[22rem] md:min-w-[22rem] w-full min-h-[10rem] p-6 bg-[#F1F1F1] rounded-md lg:order-none md:order-none order-1">
+          </div>
+        </div>
+          <div className="lg:max-w-[22rem] md:min-w-[22rem] w-full min-h-[10rem] p-6 bg-[#F1F1F1] rounded-md lg:order-none md:order-none order-1">
             <div className="w-full h-full flex flex-col gap-2">
+            <div className="w-full flex flex-col gap-3">
+            <CustomSelect
+              setOptions={setOrderStatus}
+              label="Select Status"
+              options={OrderStatus}
+            />
+            <Button
+              disabled={updateLoading}
+              onClick={handleUpdateOrder}
+              className="border bg-gray-500 rounded-md h-11 w-full hover:border-gray-600 hover:text-black flex items-center justify-center"
+            >
+              {updateLoading ? <Loader className="animate-spin" /> : "Save"}
+            </Button>
+          </div>
               <div className="w-full flex flex-row justify-between">
                 <span className="font-semibold">Subtotal</span>
                 <span className="font-semibold">{subTotalPrice}</span>
@@ -233,6 +256,7 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
             </div>
           </div>
         </div>
+        
       </div>
     </div>
   );
