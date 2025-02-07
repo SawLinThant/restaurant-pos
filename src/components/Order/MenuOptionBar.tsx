@@ -10,7 +10,7 @@ const MenuOptionBar = () => {
   return (
     <div
       className={clsx(
-        "flex w-full overflow-x-auto sticky top-0 bg-[#F1F1F1] rounded-[100px] py-[6px] px-[10px]",
+        "flex w-full overflow-x-auto top-0 bg-[#F1F1F1] rounded-[100px] py-[6px] px-[10px]",
         {}
       )}
     >
