@@ -3,6 +3,7 @@ import OrderDetail from "@/components/Dashboard/Detail/order/[orderId]";
 import StaffDetail from "@/components/Dashboard/Detail/staff/[staffId]";
 import { MenuForm, StaffForm } from "@/components/Dashboard/Form";
 import {
+  Inventory,
   Menu,
   OrderList,
   Overview,
@@ -29,6 +30,7 @@ const MainScreen = () => {
             <Route path="menu/createmenu" element={<MenuForm />} />
             <Route path="staff/createstaff" element={<StaffForm />} />
             <Route path="order" element={<OrderList />} />
+            <Route path="inventory" element={<Inventory />} />
           </Routes>
         </div>
       </div>

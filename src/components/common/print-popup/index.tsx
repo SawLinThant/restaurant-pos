@@ -1,36 +1,4 @@
-// import {
-//     AlertDialog,
-//     AlertDialogAction,
-//     AlertDialogCancel,
-//     AlertDialogContent,
-//     AlertDialogDescription,
-//     AlertDialogFooter,
-//     AlertDialogHeader,
-//     AlertDialogTitle,
-//     AlertDialogTrigger,
-//   } from "@/components/ui/alert-dialog"
 
-//   export function PrintPopup() {
-//     return (
-//       <AlertDialog>
-//         <AlertDialogTrigger asChild>
-//           <span className="hover:underline hover:cursor-pointer">Print</span>
-//         </AlertDialogTrigger>
-//         <AlertDialogContent>
-//           <AlertDialogHeader>
-//             <AlertDialogTitle>Voucher</AlertDialogTitle>
-//             <AlertDialogDescription>
-
-//             </AlertDialogDescription>
-//           </AlertDialogHeader>
-//           <AlertDialogFooter>
-//             <AlertDialogCancel>Cancel</AlertDialogCancel>
-//             <AlertDialogAction className="bg-secondary hover:border-gray-500 text-white hover:text-black">Continue</AlertDialogAction>
-//           </AlertDialogFooter>
-//         </AlertDialogContent>
-//       </AlertDialog>
-//     )
-//   }
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -50,11 +18,15 @@ export function PrintPopup() {
       </AlertDialogTrigger>
       <AlertDialogContent className="w-[350px] p-4">
         <AlertDialogHeader>
-          <div className="flex flex-col items-center border-b pb-2">
-            <div className="w-20 h-20 bg-gray-200 flex items-center justify-center rounded-lg">
-              Logo
+          <div className="flex flex-col items-center border-b pb-2 gap-1">
+            <div className="min-w-20 flex flex-row items-center justify-center rounded-lg gap-4">
+              <span className="font-semibold text-lg">Name</span>
+              <span className="text-sm">Branch - 1</span>
             </div>
-            <h2 className="text-lg font-bold">Restaurant Name</h2>
+            <span className="text-sm">address </span>
+            <span className="text-sm">Ph: 09983727832</span>
+            <span className="text-sm">HotLine: 0938823829, Online: 0938282943</span>
+            <span className="text-sm">Restaurant Counter</span>
           </div>
         </AlertDialogHeader>
         <AlertDialogDescription className="text-sm">

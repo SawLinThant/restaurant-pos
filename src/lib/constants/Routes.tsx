@@ -2,6 +2,7 @@ import { TfiMenuAlt } from "react-icons/tfi";
 import { CgMenuGridO } from "react-icons/cg";
 import { PiGridFourFill } from "react-icons/pi";
 import { BsPeopleFill } from "react-icons/bs";
+import { MdOutlineInventory2 } from "react-icons/md";
 
 interface Routeprops {
     id: number,
@@ -31,6 +32,12 @@ export const AdminRoutes:Routeprops[] = [
     },
     {
         id: 4,
+        label:'Inventory',
+        path: 'inventory',
+        icon: <MdOutlineInventory2 size={20}/>
+    },
+    {
+        id: 5,
         label:'Staff',
         path: 'staff',
         icon: <BsPeopleFill size={20}/>
