@@ -6,12 +6,12 @@ import { DailyItem } from "@/lib/type/CommonType";
 import { Loader } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
 const Inventory: React.FC = () => {
   const [createDailyCostLoading, setCreateDailyCostLoading] =
     useState<boolean>(false);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [dailyBuyList, setDailyBuyList] = useState<DailyItem[]>([]);
   const {
     register: dailyCostRegister,
@@ -29,6 +29,9 @@ const Inventory: React.FC = () => {
     setDailyBuyList((prevList) => [...prevList, newItem]);
     resetForm();
   });
+  const handleSubmit = () => {
+    setCreateDailyCostLoading(false)
+  }
   const removeDailyList = (id: string) => {
     setDailyBuyList((prev) => prev.filter((list) => list.id !== id));
   };
@@ -160,6 +163,7 @@ const Inventory: React.FC = () => {
                   Cancel
                 </Button> */}
                 <Button
+                onClick={handleSubmit}
                   disabled={createDailyCostLoading}
                   className="bg-secondary text-white min-w-[7rem] flex items-center justify-center hover:text-black hover:border-green-600"
                 >
