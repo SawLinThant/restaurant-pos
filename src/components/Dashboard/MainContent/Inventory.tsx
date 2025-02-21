@@ -2,10 +2,13 @@
 import VoucherTable from "@/components/common/voucher-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCreateBulkDailyBuying } from "@/lib/hooks/daily-buying/useCreateBulkDailyBuying";
 import { DailyItem } from "@/lib/type/CommonType";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
 //import { useNavigate } from "react-router-dom";
 
 const Inventory: React.FC = () => {
@@ -17,26 +20,59 @@ const Inventory: React.FC = () => {
     register: dailyCostRegister,
     handleSubmit: createMenuSubmit,
     reset: resetForm,
-  } = useForm();
+  } = useForm<DailyItem>();
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: createDailyBuyingList, isLoading } =
+    useCreateBulkDailyBuying({
+      onSuccess: async () => {
+        toast.success("Items added successfully");
+        await queryClient.invalidateQueries(["get-daily-buying-list"]);
+      },
+      onError: () => {
+        toast.error("Fail to add items");
+      },
+    });
+
   const handleAddList = createMenuSubmit(async (data) => {
     const newItem: DailyItem = {
       id: Date.now().toString(),
       name: data.name,
       amount: data.amount,
-      cost: parseFloat(data.cost),
+      quantity: data.quantity,
+      unit: data.unit,
+      price: data.price,
+      cost: data.cost,
     };
 
     setDailyBuyList((prevList) => [...prevList, newItem]);
     resetForm();
   });
   const handleSubmit = () => {
-    setCreateDailyCostLoading(false)
-  }
+    setCreateDailyCostLoading(false);
+  };
   const removeDailyList = (id: string) => {
     setDailyBuyList((prev) => prev.filter((list) => list.id !== id));
   };
+
+  const handleCreateDailybuying = () => {
+    console.log(dailyBuyList);
+    createDailyBuyingList({
+      DailyBuyings: dailyBuyList.map((db) => {
+        return {
+          particular: db.name,
+          unit: db.unit,
+          price: parseFloat(db.price),
+          quantity: parseInt(db.quantity),
+          Amount: parseFloat(db.cost),
+        };
+      }),
+    });
+  };
+
   return (
     <div className="w-full h-full flex flex-col gap-4 overflow-y-auto">
+      <ToastContainer autoClose={3000} position="top-center" />
       <div className="w-full flex items-center justify-start">
         <h2 className="font-semibold text-2xl">Inventory</h2>
       </div>
@@ -89,9 +125,9 @@ const Inventory: React.FC = () => {
                 </Button>
               </div>
             </div>
-            <VoucherTable />
+            <VoucherTable itemsPerPage={5} particularFilter="" />
           </div>
-          <div className="w-full flex flex-col gap-5">
+          {/* <div className="w-full flex flex-col gap-5">
             <div className="w-full flex flex-row items-center justify-between">
               <h2 className="font-semibold text-lg">Daily Order</h2>
               <div className="flex flex-row items-center gap-4">
@@ -103,8 +139,8 @@ const Inventory: React.FC = () => {
                 </Button>
               </div>
             </div>
-            <VoucherTable />
-          </div>
+            <VoucherTable data={[]} />
+          </div> */}
         </div>
 
         <div className="w-2/6 min-h-40 flex flex-col gap-8">
@@ -131,14 +167,38 @@ const Inventory: React.FC = () => {
                   </div>
                   <div className="w-full flex flex-col gap-2 items-start justify-start">
                     <label htmlFor="" className="text-sm">
-                      Amount
+                      Unit
                     </label>
                     <Input
                       type="text"
-                      {...dailyCostRegister("amount", {
+                      {...dailyCostRegister("unit", {
                         required: "Amountis required",
                       })}
                       placeholder="Eg. unit/kg"
+                    />
+                  </div>
+                  <div className="w-full flex flex-col gap-2 items-start justify-start">
+                    <label htmlFor="" className="text-sm">
+                      Price
+                    </label>
+                    <Input
+                      type="number"
+                      {...dailyCostRegister("price", {
+                        required: "price required",
+                      })}
+                      placeholder="price"
+                    />
+                  </div>
+                  <div className="w-full flex flex-col gap-2 items-start justify-start">
+                    <label htmlFor="" className="text-sm">
+                      Quantity
+                    </label>
+                    <Input
+                      type="number"
+                      {...dailyCostRegister("quantity", {
+                        required: "Cost is required",
+                      })}
+                      placeholder="Enter quantity"
                     />
                   </div>
                   <div className="w-full flex flex-col gap-2 items-start justify-start">
@@ -163,7 +223,7 @@ const Inventory: React.FC = () => {
                   Cancel
                 </Button> */}
                 <Button
-                onClick={handleSubmit}
+                  onClick={handleSubmit}
                   disabled={createDailyCostLoading}
                   className="bg-secondary text-white min-w-[7rem] flex items-center justify-center hover:text-black hover:border-green-600"
                 >
@@ -199,12 +259,9 @@ const Inventory: React.FC = () => {
             <Button
               disabled={createDailyCostLoading}
               className="bg-secondary text-white min-w-[7rem] flex items-center mt-2 justify-center hover:text-black hover:border-green-600"
+              onClick={handleCreateDailybuying}
             >
-              {createDailyCostLoading ? (
-                <Loader className="animate-spin" />
-              ) : (
-                "Save"
-              )}
+              {isLoading ? <Loader className="animate-spin" /> : "Save"}
             </Button>
           </div>
         </div>
