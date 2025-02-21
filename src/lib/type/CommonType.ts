@@ -48,8 +48,11 @@ export interface UserResponse {
 }
 
 export interface DailyItem {
-  id: string
-  name: string
-  amount: string
-  cost: number
+  id: string;
+  name: string;
+  quantity: string;
+  amount: string;
+  cost: string;
+  unit: string;
+  price:string
 }
