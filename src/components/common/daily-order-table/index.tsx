@@ -9,30 +9,30 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "@/components/ui/button";
-import { useGetDailyBuyingList } from "@/lib/hooks/daily-buying/useGetDailyBuyingList";
-import { Loader } from "lucide-react";
 
-interface DailyBuying {
-  Id: string;
-  particular: string;
-  unit: string;
-  price: number;
-  quantity: number;
-  Amount: number;
-  createdDate: string;
-  updatedDate: string;
-}
+import { Loader } from "lucide-react";
+import { useGetOrderList } from "@/lib/hooks/product/useGetOrderList";
+import { OrderResponse } from "@/lib/type/CommonType";
+
+// interface DailyBuying {
+//   Id: string;
+//   particular: string;
+//   unit: string;
+//   price: number;
+//   quantity: number;
+//   Amount: number;
+//   createdDate: string;
+//   updatedDate: string;
+// }
 
 interface DailyOrderTableProps {
-  data?: DailyBuying[];
+  data?: OrderResponse["data"][];
   itemsPerPage?: number;
-  particularFilter?: string;
 }
 
 const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
   data: initialData,
   itemsPerPage = 10,
-  particularFilter,
 }) => {
   const [page, setPage] = useState(1);
 
@@ -40,18 +40,18 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
     data: fetchedData,
     isLoading,
     error,
-  } = useGetDailyBuyingList(
+  } = useGetOrderList(
     {
       skip: (page - 1) * itemsPerPage,
       take: itemsPerPage,
-      particular: particularFilter,
+      // particular: particularFilter,
     },
     {
       enabled: !initialData,
     }
   );
 
-  const data = initialData || fetchedData?.data?.DailyBuyings || [];
+  const data = initialData || fetchedData?.data?.orders || [];
   const totalCount = fetchedData?.data?.totalCounts || initialData?.length || 0;
   // const totalAmount = data.reduce((sum, item) => sum + item.Amount, 0);
   const totalPages = Math.ceil(totalCount / itemsPerPage);
@@ -68,7 +68,7 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
 
   return (
     <div className="w-full flex flex-col ">
-      <div className="rounded-t-md">
+      <div className="overflow-y-auto h-[280px] relative scrollbar-none">
         <Table>
           <TableHeader>
             <TableRow className="bg-secondary text-white font-semibold hover:bg-secondary">
@@ -76,26 +76,22 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
                 No
               </TableHead>
               <TableHead className="w-[17rem] border text-white border-[#009258] border-l-0 text-center">
-                Particular
+                Order Id
               </TableHead>
               <TableHead className="border-y border-r text-white border-[#009258] text-center">
-                Unit
+                Status
               </TableHead>
               <TableHead className="border-y border-r text-white border-[#009258] text-center">
-                Qty
+                Table
               </TableHead>
               <TableHead className="border-y border-r text-white border-[#009258] text-center">
-                Price
+                Created Date
               </TableHead>
               <TableHead className="border text-white border-[#009258] text-center">
-                Amount
+                Updated Date
               </TableHead>
             </TableRow>
           </TableHeader>
-        </Table>
-      </div>
-      <div className="overflow-y-auto h-[200px] relative scrollbar-none">
-        <Table>
           <TableBody>
             {!isLoading &&
               data.map((item, index) => (
@@ -106,17 +102,11 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
                   <TableCell className="w-12 p-2 border">
                     {(page - 1) * itemsPerPage + index + 1}
                   </TableCell>
-                  <TableCell className="w-[17rem] border">
-                    {item.particular}
-                  </TableCell>
-                  <TableCell className="border">{item.unit}</TableCell>
-                  <TableCell className="border">{item.quantity}</TableCell>
-                  <TableCell className="border">
-                    {item.price.toLocaleString()}
-                  </TableCell>
-                  <TableCell className="border">
-                    {item.Amount.toLocaleString()}
-                  </TableCell>
+                  <TableCell className="w-[17rem] border">{item.Id}</TableCell>
+                  <TableCell className="border">{item.status}</TableCell>
+                  <TableCell className="border">{item.table}</TableCell>
+                  <TableCell className="border">{item.createdDate}</TableCell>
+                  <TableCell className="border">{item.updatedDate}</TableCell>
                 </TableRow>
               ))}
 

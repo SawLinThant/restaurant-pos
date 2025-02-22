@@ -1,4 +1,5 @@
 //import { ProductChart } from "@/components/common/product-chart";
+import DailyOrderTable from "@/components/common/daily-order-table";
 import VoucherTable from "@/components/common/voucher-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -127,7 +128,7 @@ const Inventory: React.FC = () => {
             </div>
             <VoucherTable itemsPerPage={5} particularFilter="" />
           </div>
-          {/* <div className="w-full flex flex-col gap-5">
+          <div className="w-full flex flex-col gap-5">
             <div className="w-full flex flex-row items-center justify-between">
               <h2 className="font-semibold text-lg">Daily Order</h2>
               <div className="flex flex-row items-center gap-4">
@@ -139,8 +140,8 @@ const Inventory: React.FC = () => {
                 </Button>
               </div>
             </div>
-            <VoucherTable data={[]} />
-          </div> */}
+            <DailyOrderTable itemsPerPage={5} />
+          </div>
         </div>
 
         <div className="w-2/6 min-h-40 flex flex-col gap-8">
