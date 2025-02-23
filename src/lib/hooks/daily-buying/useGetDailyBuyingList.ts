@@ -27,6 +27,7 @@ interface GetDailyBuyingListResponseDto
   extends BaseResponseSchema<{
     DailyBuyings: DailyBuying[];
     totalCounts: number;
+    totalPrice: number;
   }> {}
 
 type GetDailyBuyingListOptions = Omit<

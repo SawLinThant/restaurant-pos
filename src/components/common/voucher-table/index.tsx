@@ -158,6 +158,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useGetDailyBuyingList } from "@/lib/hooks/daily-buying/useGetDailyBuyingList";
 import { Loader } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DailyBuying {
   Id: string;
@@ -215,6 +216,12 @@ const VoucherTable: React.FC<VoucherTableProps> = ({
 
   return (
     <div className="w-full flex flex-col ">
+      <div className="flex items-center gap-x-2">
+        <span className="text-[1.2rem] text-black font-semibold">{`Total:`}</span>
+        <span className="text-[1rem] text-black font-[500]">
+          {fetchedData?.data?.totalPrice || 0}
+        </span>
+      </div>
       <div className="rounded-t-md">
         <Table>
           <TableHeader>
@@ -246,7 +253,10 @@ const VoucherTable: React.FC<VoucherTableProps> = ({
           <TableBody>
             {!isLoading &&
               data.map((item, index) => (
-                <TableRow key={item.Id} className="text-center [&:nth-child(1)]:border-t-0">
+                <TableRow
+                  key={item.Id}
+                  className="text-center [&:nth-child(1)]:border-t-0"
+                >
                   <TableCell className="w-12 p-2 border">
                     {(page - 1) * itemsPerPage + index + 1}
                   </TableCell>
@@ -263,21 +273,44 @@ const VoucherTable: React.FC<VoucherTableProps> = ({
                   </TableCell>
                 </TableRow>
               ))}
-
-            {/* <TableRow className="text-center">
-            <TableCell className="w-12 p-2" />
-            <TableCell className="w-[17rem]" />
-            <TableCell />
-            <TableCell />
-            <TableCell className="border-b py-4 font-bold">Total</TableCell>
-            <TableCell className="border-x border-b font-bold text-[#009258]">
-              {totalAmount.toLocaleString()}
-            </TableCell>
-          </TableRow> */}
           </TableBody>
+          {isLoading && (
+            <TableBody>
+              {Array(5)
+                .fill(null)
+                .map((_, index) => (
+                  <TableRow
+                    key={index}
+                    className="text-center [&:nth-child(1)]:border-t-0"
+                  >
+                    <TableCell className="w-12 p-2 border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
+                    <TableCell className="w-[17rem] border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
+                    <TableCell className="border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
+                    <TableCell className="border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
+                    <TableCell className="border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          )}
+          {!isLoading && data.length < 1 && (
+            <div className="flex w-full items-center justify-center">
+              {" "}
+              <Loader className="animate-spin" />
+            </div>
+          )}
         </Table>
       </div>
-
+      {/* 
       {isLoading && (
         <div className="flex w-full items-center justify-center">
           {" "}
@@ -289,7 +322,7 @@ const VoucherTable: React.FC<VoucherTableProps> = ({
           {" "}
           <Loader className="animate-spin" />
         </div>
-      )}
+      )} */}
       {/* Pagination Controls */}
       {totalCount > 0 && (
         <div className="flex items-center justify-center">

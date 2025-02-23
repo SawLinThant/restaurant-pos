@@ -10,9 +10,9 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import { Loader } from "lucide-react";
 import { useGetOrderList } from "@/lib/hooks/product/useGetOrderList";
 import { OrderResponse } from "@/lib/type/CommonType";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // interface DailyBuying {
 //   Id: string;
@@ -68,8 +68,14 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
 
   return (
     <div className="w-full flex flex-col ">
-      <div className="overflow-y-auto h-[280px] relative scrollbar-none">
-        <Table>
+       <div className="flex items-center gap-x-2">
+        <span className="text-[1.2rem] text-black font-semibold">{`Total:`}</span>
+        <span className="text-[1rem] text-black font-[500]">
+          {fetchedData?.data?.totalPrice || 0}
+        </span>
+      </div>
+      <div className="w-full overflow-y-auto h-[250px] relative scrollbar-none">
+        <Table className="border-b">
           <TableHeader>
             <TableRow className="bg-secondary text-white font-semibold hover:bg-secondary">
               <TableHead className="w-12 border text-white border-[#009258] text-center py-4">
@@ -85,11 +91,11 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
                 Table
               </TableHead>
               <TableHead className="border-y border-r text-white border-[#009258] text-center">
-                Created Date
+                Total Amount
               </TableHead>
-              <TableHead className="border text-white border-[#009258] text-center">
+              {/* <TableHead className="border text-white border-[#009258] text-center">
                 Updated Date
-              </TableHead>
+              </TableHead> */}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -105,26 +111,54 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
                   <TableCell className="w-[17rem] border">{item.Id}</TableCell>
                   <TableCell className="border">{item.status}</TableCell>
                   <TableCell className="border">{item.table}</TableCell>
-                  <TableCell className="border">{item.createdDate}</TableCell>
-                  <TableCell className="border">{item.updatedDate}</TableCell>
+                  <TableCell className="border">
+                    {item.orderItems?.reduce((previous, current) => {
+                      return (
+                        previous + current.quantity * current.product.price
+                      );
+                    }, 0)}
+                  </TableCell>
+                  {/* <TableCell className="border">{item.updatedDate}</TableCell> */}
                 </TableRow>
               ))}
-
-            {/* <TableRow className="text-center">
-            <TableCell className="w-12 p-2" />
-            <TableCell className="w-[17rem]" />
-            <TableCell />
-            <TableCell />
-            <TableCell className="border-b py-4 font-bold">Total</TableCell>
-            <TableCell className="border-x border-b font-bold text-[#009258]">
-              {totalAmount.toLocaleString()}
-            </TableCell>
-          </TableRow> */}
           </TableBody>
+          {isLoading && (
+            <TableBody>
+              {Array(5)
+                .fill(null)
+                .map((_, index) => (
+                  <TableRow
+                    key={index}
+                    className="text-center [&:nth-child(1)]:border-t-0"
+                  >
+                    <TableCell className="w-12 p-2 border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
+                    <TableCell className="w-[17rem] border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
+                    <TableCell className="border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
+                    <TableCell className="border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
+                    <TableCell className="border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          )}
+          {!isLoading && data.length < 1 && (
+            <div className="flex w-full items-center justify-center">
+              <span>No order available</span>
+            </div>
+          )}
         </Table>
       </div>
 
-      {isLoading && (
+      {/* {isLoading && (
         <div className="flex w-full items-center justify-center">
           {" "}
           <Loader className="animate-spin" />
@@ -132,13 +166,12 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
       )}
       {!isLoading && data.length < 1 && (
         <div className="flex w-full items-center justify-center">
-          {" "}
-          <Loader className="animate-spin" />
+          <span>No order available</span>
         </div>
-      )}
+      )} */}
       {/* Pagination Controls */}
       {totalCount > 0 && (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center mt-1">
           {/* <div>
             Showing {(page - 1) * itemsPerPage + 1} to{" "}
             {Math.min(page * itemsPerPage, totalCount)} of {totalCount} entries
