@@ -1,4 +1,3 @@
-
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -9,8 +8,35 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import { OrderItem, OrderResponse } from "@/lib/type/CommonType";
+import { useEffect, useState } from "react";
 
-export function PrintPopup() {
+const PrintPopup = ({ data }: { data: OrderResponse | null }) => {
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
+  const tax = 0;
+  useEffect(() => {
+    setOrderItems(data?.data.orderItems || []);
+  }, [data]);
+  const subtotal = orderItems.reduce((sum, item) => {
+    return sum + item.product.price * item.quantity;
+  }, 0);
+
+  const taxAmount = subtotal * (tax / 100);
+
+  const total = subtotal + taxAmount;
+
+  const timestamp = data?.data.createdDate || "2024-12-17T08:52:58.347Z"; // Fallback to example timestamp
+  const dateObj = new Date(timestamp);
+  const date = dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  });
+  const time = dateObj.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true, 
+  });
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -25,7 +51,9 @@ export function PrintPopup() {
             </div>
             <span className="text-sm">address </span>
             <span className="text-sm">Ph: 09983727832</span>
-            <span className="text-sm">HotLine: 0938823829, Online: 0938282943</span>
+            <span className="text-sm">
+              HotLine: 0938823829, Online: 0938282943
+            </span>
             <span className="text-sm">Restaurant Counter</span>
           </div>
         </AlertDialogHeader>
@@ -35,13 +63,13 @@ export function PrintPopup() {
               Order ID: <span className="font-medium">#1234</span>
             </p>
             <p>
-              Date: <span className="font-medium">1.1.2025</span>
+              Date: <span className="font-medium">{date}</span>
             </p>
             <p>
               Staff: <span className="font-medium">Thiha</span>
             </p>
             <p>
-              Time: <span className="font-medium">11:50AM</span>
+              Time: <span className="font-medium">{time}</span>
             </p>
           </div>
           <div className="mt-2 border-b pb-2 text-sm">
@@ -54,21 +82,18 @@ export function PrintPopup() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="mt-2">
-                  <td>Salad</td>
-                  <td className="text-center">1×7500</td>
-                  <td className="text-right">7500 MMK</td>
-                </tr>
-                <tr>
-                  <td>Pasta</td>
-                  <td className="text-center">2×10000</td>
-                  <td className="text-right">20000 MMK</td>
-                </tr>
-                <tr>
-                  <td>Lamp Stew</td>
-                  <td className="text-center">2×20000</td>
-                  <td className="text-right">40000 MMK</td>
-                </tr>
+                {orderItems.map((order) => (
+                  <tr key={order.Id} className="mt-2">
+                    <td>{order.product.name}</td>
+                    <td className="text-center">
+                      {order.product.price}×{order.quantity}
+                    </td>
+                    <td className="text-right">
+                      {(order.product.price * order.quantity).toLocaleString()}{" "}
+                      MMK
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -77,14 +102,14 @@ export function PrintPopup() {
               <div className="w-full flex flex-row justify-between items-center">
                 <span>Subtotal</span>
                 <p>
-                  <span className="font-medium">67500 MMK</span>
+                  <span className="font-medium">{subtotal.toLocaleString()} MMK</span>
                 </p>
               </div>
 
               <div className="w-full flex flex-row justify-between items-center">
-                <span>Tax(10%)</span>
+                <span>Tax({tax}%)</span>
                 <p>
-                  <span className="font-medium">67500 MMK</span>
+                  <span className="font-medium">{tax} MMK</span>
                 </p>
               </div>
             </div>
@@ -92,7 +117,7 @@ export function PrintPopup() {
             <div className="w-full border-b border-dashed"></div>
             <div className="flex-row flex justify-between items-center">
               <span>Total:</span>
-              <p className="font-bold"> 74250 MMK</p>
+              <p className="font-bold"> {total.toLocaleString()} MMK</p>
             </div>
           </div>
         </AlertDialogDescription>
@@ -107,4 +132,5 @@ export function PrintPopup() {
       </AlertDialogContent>
     </AlertDialog>
   );
-}
+};
+export default PrintPopup;
