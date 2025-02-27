@@ -12,7 +12,7 @@ import PlusIcon from "@/components/icons/plus";
 import clsx from "clsx";
 import { useUpdateOrderItem } from "@/lib/hooks/order/useUpdateOrderItem";
 import { OrderDto } from "@/lib/hooks/order/dto";
-import { PrintPopup } from "../print-popup";
+import PrintPopup from "../print-popup";
 
 const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
   const navigate = useNavigate();
@@ -121,7 +121,7 @@ const OrderDetail = ({ data }: { data: OrderResponse | null }) => {
             </div>
           </div>
           <div className="w-full flex flex-row justify-end mt-4">
-            <PrintPopup/>
+            <PrintPopup data={data}/>
           </div>
         </div>
         <div className="w-full flex flex-col gap-3">
