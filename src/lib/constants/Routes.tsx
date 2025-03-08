@@ -42,4 +42,10 @@ export const AdminRoutes:Routeprops[] = [
         path: 'staff',
         icon: <BsPeopleFill size={20}/>
     },
+    {
+        id: 6,
+        label:'Stock',
+        path: 'stock',
+        icon: <BsPeopleFill size={20}/>
+    },
 ]
