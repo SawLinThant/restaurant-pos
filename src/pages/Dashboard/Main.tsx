@@ -10,6 +10,8 @@ import {
   Staff,
 } from "@/components/Dashboard/MainContent";
 import Sidebar from "@/components/Dashboard/Sidebar";
+import StockCrateForm from "@/components/Dashboard/Stock/StockCreateForm";
+import StockList from "@/components/Dashboard/Stock/StockList";
 import MobileNav from "@/components/MobileNav";
 import { Route, Routes } from "react-router-dom";
 
@@ -31,6 +33,8 @@ const MainScreen = () => {
             <Route path="staff/createstaff" element={<StaffForm />} />
             <Route path="order" element={<OrderList />} />
             <Route path="inventory" element={<Inventory />} />
+            <Route path="stock" element={<StockCrateForm />} />
+            <Route path="stock/list" element={<StockList />} />
           </Routes>
         </div>
       </div>

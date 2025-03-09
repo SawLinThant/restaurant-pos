@@ -3,7 +3,7 @@ import { CgMenuGridO } from "react-icons/cg";
 import { PiGridFourFill } from "react-icons/pi";
 import { BsPeopleFill } from "react-icons/bs";
 import { MdOutlineInventory2 } from "react-icons/md";
-
+import { BsCart3 } from "react-icons/bs";
 interface Routeprops {
     id: number,
     label: string,
@@ -41,5 +41,11 @@ export const AdminRoutes:Routeprops[] = [
         label:'Staff',
         path: 'staff',
         icon: <BsPeopleFill size={20}/>
+    },
+    {
+        id: 6,
+        label:'Stock',
+        path: 'stock/list',
+        icon: <BsCart3 size={20}/>
     },
 ]
