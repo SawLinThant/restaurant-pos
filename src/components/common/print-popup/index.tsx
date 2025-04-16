@@ -357,7 +357,7 @@ const PrintPopup = ({ data }: { data: OrderResponse | null }) => {
       </AlertDialogTrigger>
       <AlertDialogContent className="w-[350px] p-4">
         <AlertDialogHeader>
-          <div className="flex flex-col items-center border-b pb-2 gap-1">
+          {/* <div className="flex flex-col items-center border-b pb-2 gap-1">
             <div className="min-w-20 flex flex-row items-center justify-center rounded-lg gap-4">
               <span className="font-semibold text-lg">Name</span>
               <span className="text-sm">Branch - 1</span>
@@ -368,25 +368,39 @@ const PrintPopup = ({ data }: { data: OrderResponse | null }) => {
               HotLine: 0938823829, Online: 0938282943
             </span>
             <span className="text-sm">Restaurant Counter</span>
-          </div>
+          </div> */}
         </AlertDialogHeader>
         <AlertDialogDescription className="text-sm">
           {/* Printable content */}
           <div
             ref={componentRef}
-            className="print-content mt-2 border-b pb-2 text-sm font-mono"
+            className="print-content mt-2 border-b border-black pb-2 text-sm font-mono"
             style={{
               fontFamily: "Courier", // Use "Courier" without quotes for consistency
               fontSize: thermalConfig.fontSize,
             }}
           >
-            <p>Order ID: #{data?.data.Id || "1234"}</p>
-            <p>Date: {date}</p>
-            <p>Staff: Thiha</p>
-            <p>Time: {time}</p>
+            <div className="flex flex-col items-start border-b border-black pb-2 gap-1 font-bold mb-2">
+              <div className="min-w-20 flex flex-row items-center justify-center rounded-lg gap-4">
+                <span className="font-semibold text-lg">Name</span>
+                <span className="text-sm">Branch - 1</span>
+              </div>
+              <span className="text-sm flex gap-1">
+                <p>Address:</p>
+                <p>North Dagon, Yangon</p>
+              </span>
+              <span className="text-sm">Ph: 09983727832</span>
+              <span className="text-sm">HotLine: 0938823829</span>
+              <span className="text-sm">Online: 0938282943</span>
+              {/* <span className="text-sm">Restaurant Counter</span> */}
+            </div>
+            <p className="font-bold">Order ID: #{data?.data.Id || "1234"}</p>
+            <p className="font-bold">Date: {date}</p>
+            <p className="font-bold">Staff: Thiha</p>
+            <p className="font-bold">Time: {time}</p>
             <table className="w-full text-left mt-2">
               <thead>
-                <tr className="border-b font-bold">
+                <tr className="border-b border-black font-bold">
                   <th className="py-1">Menu</th>
                   <th className="py-1 text-center">Count</th>
                   <th className="py-1 text-right">Price</th>
@@ -424,8 +438,8 @@ const PrintPopup = ({ data }: { data: OrderResponse | null }) => {
                   </span>
                 </p>
               </div>
-              <div className="w-full border-b border-dashed"></div>
-              <div className="flex-row flex justify-between items-center">
+              <div className="w-full border-b-2 border-black border-dashed"></div>
+              <div className="flex-row flex justify-between items-center bord">
                 <span className="font-bold">Total:</span>
                 <p className="font-bold">{total.toLocaleString()} MMK</p>
               </div>
