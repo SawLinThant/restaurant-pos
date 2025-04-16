@@ -1,5 +1,3 @@
-
-
 // import {
 //   AlertDialog,
 //   AlertDialogTrigger,
@@ -388,7 +386,7 @@ const PrintPopup = ({ data }: { data: OrderResponse | null }) => {
             <p>Time: {time}</p>
             <table className="w-full text-left mt-2">
               <thead>
-                <tr className="border-b">
+                <tr className="border-b font-bold">
                   <th className="py-1">Menu</th>
                   <th className="py-1 text-center">Count</th>
                   <th className="py-1 text-right">Price</th>
@@ -396,7 +394,7 @@ const PrintPopup = ({ data }: { data: OrderResponse | null }) => {
               </thead>
               <tbody>
                 {orderItems.map((order) => (
-                  <tr key={order.Id} className="mt-2">
+                  <tr key={order.Id} className="mt-2 font-bold">
                     <td>{order.product.name}</td>
                     <td className="text-center">
                       {order.product.price}×{order.quantity}
@@ -411,24 +409,24 @@ const PrintPopup = ({ data }: { data: OrderResponse | null }) => {
             </table>
             <div className="mt-2 text-right flex flex-col gap-2">
               <div className="w-full flex flex-row justify-between items-center">
-                <span>Subtotal</span>
+                <span className="font-bold">Subtotal</span>
                 <p>
-                  <span className="font-medium">
+                  <span className="font-bold">
                     {subtotal.toLocaleString()} MMK
                   </span>
                 </p>
               </div>
               <div className="w-full flex flex-row justify-between items-center">
-                <span>Tax({tax}%)</span>
+                <span className="font-bold">Tax({tax}%)</span>
                 <p>
-                  <span className="font-medium">
+                  <span className="font-bold">
                     {taxAmount.toLocaleString()} MMK
                   </span>
                 </p>
               </div>
               <div className="w-full border-b border-dashed"></div>
               <div className="flex-row flex justify-between items-center">
-                <span>Total:</span>
+                <span className="font-bold">Total:</span>
                 <p className="font-bold">{total.toLocaleString()} MMK</p>
               </div>
             </div>
