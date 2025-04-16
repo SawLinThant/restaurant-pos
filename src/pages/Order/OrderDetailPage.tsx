@@ -1,4 +1,5 @@
-import OrderDetail from "@/components/common/product-detail";
+
+import WaiterOrderDetail from "@/components/Order/WaiterOrderDetail";
 import { useGetOrderDetail } from "@/lib/hooks/order/useGetOrderDetail";
 import { Loader2 } from "lucide-react";
 import { useParams } from "react-router-dom";
@@ -12,7 +13,7 @@ function OrderDetailPage() {
         <Loader2 className="animate-spin" size={30} /> Loading
       </div>
     );
-  return <OrderDetail data={orderDetail || null} />;
+  return <WaiterOrderDetail data={orderDetail || null} />;
 }
 
 export default OrderDetailPage;

@@ -10,6 +10,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    host: '0.0.0.0', 
+  },
   build: {
      // This will ignore all eslint warnings/errors during build
      rollupOptions: {

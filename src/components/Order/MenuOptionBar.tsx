@@ -10,7 +10,7 @@ const MenuOptionBar = () => {
   return (
     <div
       className={clsx(
-        "flex w-full sticky top-0 bg-[#F1F1F1] rounded-[100px] py-[6px] px-[10px]",
+        "flex w-full overflow-x-auto top-0 bg-[#F1F1F1] rounded-[100px] py-[6px] px-[10px]",
         {}
       )}
     >
@@ -18,7 +18,7 @@ const MenuOptionBar = () => {
         return (
           <div
             className={clsx(
-              "py-[15px] w-full items-center justify-center flex rounded-[100px] cursor-pointer",
+              "py-[15px] w-full min-w-[120px] items-center justify-center flex rounded-[100px] cursor-pointer",
               {
                 "bg-[#FFFFFF]": currentOption.isSelected,
                 "bg-[#F1F1F1]": !currentOption.isSelected,

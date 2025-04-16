@@ -10,12 +10,13 @@ import { OrderResponse } from "@/lib/type/CommonType";
 
 interface OrderListResponse
   extends BaseResponseSchema<{
-    orders: OrderResponse['data'][];
-    totalCount: number;
+    orders: OrderResponse["data"][];
+    totalCounts: number;
   }> {
   data: {
-    orders: OrderResponse['data'][];
-    totalCount: number;
+    orders: OrderResponse["data"][];
+    totalCounts: number;
+    totalPrice: number;
   };
 }
 

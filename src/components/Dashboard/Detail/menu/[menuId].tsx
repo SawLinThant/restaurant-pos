@@ -111,7 +111,7 @@ const MenuDetail = () => {
   return (
     <div className="w-full h-full flex items-center justify-center">
       <ToastContainer autoClose={3000} position="top-center"/>
-      <div className="w-full flex flex-col gap-4 border border-gray-300  rounded-md p-6 lg:w-[60vw] max-w-[900px] md:w-[90vw]">
+      <div className="w-full flex flex-col gap-4 border border-gray-300  rounded-md p-6 lg:w-[60vw] lg:max-w-[900px] md:w-[90vw]">
         <div className="w-full px-4 flex flex-row items-center justify-end">
         <div onClick={() => navigate(-1)} className="hover:cursor-pointer">
               <X size={30} color="black" />
@@ -126,20 +126,20 @@ const MenuDetail = () => {
                 ) : (
                   <img
                     src={menuDetail?.image}
-                    className="object-cover bg-cover w-full max-h-[400px] rounded-md"
+                    className="object-contain bg-cover w-full max-h-[200px] rounded-md"
                   />
                 )}
               </div>
             </div>
           </div>
-          <div>
+          <div className="h-full">
             {loading ? (
               <div className="w-full h-full py-4 px-6">
                 <SkeletonProductDetail />
               </div>
             ) : (
-              <div className="w-full h-full flex flex-col py-4 px-6 justify-between gap-4">
-                <div>
+              <div className="w-full h-full flex flex-col py-4 lg:px-6 md:px-6 justify-between gap-4">
+                <div className="h-full">
                   <div className="w-full flex flex-col gap-4">
                     <div className="w-full py-4 border-b">
                       <h1 className="font-semibold text-2xl">Menu Detail</h1>
@@ -153,7 +153,7 @@ const MenuDetail = () => {
                           name="name"
                           onChange={handleInputChange}
                           disabled={!isEdit}
-                          className={cn("w-full px-4 ", {
+                          className={cn("w-full px-4 bg-white", {
                             "bg-transparent shadow-none border-none": !isEdit,
                             "shadow-none border rounded-md border-gray-400 py-2":
                               isEdit,
@@ -172,7 +172,7 @@ const MenuDetail = () => {
                           name="category"
                           onChange={handleInputChange}
                           disabled={!isEdit}
-                          className={cn("w-full px-4 ", {
+                          className={cn("w-full px-4 bg-white", {
                             "bg-transparent shadow-none border-none": !isEdit,
                             "shadow-none border rounded-md border-gray-400 py-2":
                               isEdit,
@@ -192,7 +192,7 @@ const MenuDetail = () => {
                           type="number"
                           disabled={!isEdit}
                           onChange={handleInputChange}
-                          className={cn("w-full px-4 ", {
+                          className={cn("w-full px-4 bg-white", {
                             "bg-transparent shadow-none border-none": !isEdit,
                             "shadow-none border rounded-md border-gray-400 py-2":
                               isEdit,
@@ -218,7 +218,7 @@ const MenuDetail = () => {
                           name="description"
                           onChange={handleInputChange}
                           disabled={!isEdit}
-                          className={cn("w-full px-4 ", {
+                          className={cn("w-full px-4 bg-white", {
                             "bg-transparent shadow-none border-none": !isEdit,
                             "shadow-none border rounded-md border-gray-400 py-2":
                               isEdit,

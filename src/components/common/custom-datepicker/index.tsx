@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { useEffect, useRef, useState } from "react"
 
 interface DatePickerProps {
     setSelectedDate: (e:Date | undefined) => void
@@ -24,11 +25,19 @@ export function DatePicker({setSelectedDate,label}:DatePickerProps) {
     setDate(selectedDate);
     setSelectedDate(selectedDate)
   }
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [triggerWidth, setTriggerWidth] = useState<number | undefined>();
+  useEffect(() => {
+    if (triggerRef.current) {
+      setTriggerWidth(triggerRef.current.offsetWidth);
+    }
+  }, [triggerRef.current]);
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+        ref={triggerRef}
           variant={"outline"}
           className={cn(
             "w-full h-full justify-start text-left font-normal border border-gray-500",
@@ -39,7 +48,7 @@ export function DatePicker({setSelectedDate,label}:DatePickerProps) {
           {date ? format(date, "PPP") : <span>{label}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent  style={{ width: triggerWidth || "auto" }} className="w-auto max-w-[260px] p-0">
         <Calendar
           mode="single"
           selected={date}

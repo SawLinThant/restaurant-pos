@@ -18,13 +18,14 @@ type UpdateOrderItemOptions = Omit<
 export const useUpdateOrderItem = (options?: UpdateOrderItemOptions) => {
   return useMutation({
     mutationFn: async (orderData) => {
-      const response = await axios.post<UpdateOrderItemResponse>(
-        `${baseUrl}/Order/updateOrderItem`,
-        orderData,
+      const response = await axios.put<UpdateOrderItemResponse>(
+        `${baseUrl}/Order/updateOrderItems`,
+        orderData.payload,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          params: { id: orderData.params.id },
         }
       );
       return response.data;

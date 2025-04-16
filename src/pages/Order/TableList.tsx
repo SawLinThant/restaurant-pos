@@ -1,6 +1,7 @@
 import SelectTable, { TableProps } from "@/components/Order/SelectTable";
 import OrderCard from "@/components/Order/TableCard";
 import { useGetOrderList } from "@/lib/hooks/product/useGetOrderList";
+import { Loader2 } from "lucide-react";
 
 import { useState } from "react";
 
@@ -14,14 +15,26 @@ const tableList: TableProps[] = [
 function TableList() {
   const { data: orderList, isLoading } = useGetOrderList({ take: 10, skip: 0 });
   console.log("orderList:", orderList?.data?.orders);
-//   console.log("order sample id:", orderList?.data.orders[0].Id);
+  //   console.log("order sample id:", orderList?.data.orders[0].Id);
   const [selectedTable, setSelectedTable] = useState<TableProps | null>(null);
-  console.log(selectedTable)
+  console.log(selectedTable);
   return (
     <div className="flex w-full flex-col gap-[20px] px-[30px] py-[20px] h-[90dvh] overflow-y-auto overflow-x-hidden">
-      {!isLoading && orderList?.data.orders.map((order) => (
-        <OrderCard table={order.table || ""} orderId={order.Id || ""} key={order.Id+Date.now().toString()} status={order.status || ""} totalItems={order.orderItems ? order.orderItems.length : 0}/>
-      ))}
+      {isLoading && (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader2 className="animate-spin" size={30} /> Loading
+        </div>
+      )}
+      {!isLoading &&
+        orderList?.data.orders.map((order) => (
+          <OrderCard
+            table={order.table || ""}
+            orderId={order.Id || ""}
+            key={order.Id + Date.now().toString()}
+            status={order.status || ""}
+            totalItems={order.orderItems ? order.orderItems.length : 0}
+          />
+        ))}
       <div className="fixed right-[30px] bottom-[40%] w-[60px] h-[60px]">
         <SelectTable
           setSelectedTable={setSelectedTable}

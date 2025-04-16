@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
   	extend: {
+		screens:{
+			customLg:"1250px"
+		},
 		boxShadow:{
 			AppBarShadow:'0px 4px 4px 0px #1E1E1E40',
 			OrderCardShadow:'0px 1px 50px 3px #1E1E1E0D',
@@ -66,5 +69,5 @@ export default {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),require('tailwind-scrollbar')],
 }

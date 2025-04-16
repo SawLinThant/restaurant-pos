@@ -79,8 +79,8 @@ const OrderList = () => {
       <div className="w-full flex items-center justify-start">
         <h2 className="font-semibold text-2xl">order</h2>
       </div>
-      <div className="w-full flex flex-row items-start justify-between mt-4">
-        <div className="w-1/3 h-[3rem] relative">
+      <div className="w-full flex lg:flex-row md:flex-row flex-col gap-3 items-start justify-between mt-4">
+        <div className="lg:w-1/3 md:w-2/3 w-full h-[3rem] relative">
           <input
             placeholder="Search"
             type="text"
@@ -90,18 +90,18 @@ const OrderList = () => {
               setSearchQuery(value);
               handleSearch(value);
             }}
-            className="w-full h-full px-4 pl-10 rounded-md border border-gray-600"
+            className="w-full h-full px-4 pl-10 rounded-md border border-gray-600 dark:bg-white bg-white"
           />
           <div className="absolute left-2 top-3 z-10">
             <CiSearch size={25} />
           </div>
         </div>
-        <div>
-          <div className="flex flex-row gap-4">
-            <div className="w-[12rem]">
+        <div className="w-full">
+          <div className="flex w-full lg:flex-row lg:justify-end md:flex-row md:justify-end flex-col gap-4">
+            <div className="lg:w-[12rem] md:w-[10rem] w-full">
               <DatePicker label="Start Date" setSelectedDate={setStartDate}/>
             </div>
-            <div className="w-[12rem]">
+            <div className="lg:w-[12rem] md:w-[10rem] w-full">
               <DatePicker label="End Date" setSelectedDate={setEndDate}/>
             </div>
 
@@ -114,7 +114,7 @@ const OrderList = () => {
           </div>
         </div>
       </div>
-      <div className="w-full mt-4">
+      <div className="w-full overflow-auto mt-4">
         <CustomTable
           loading={loading}
           column={ORDER_COLUMN()}
