@@ -1,126 +1,209 @@
 import { useDispatch, useSelector } from "react-redux";
-import OrderCartDetail from "./OrderCartDetail";
 import { RootState } from "@/store/store";
 import { clearCart } from "@/store/slices/orderCartSlice";
 import { useForm } from "react-hook-form";
-import { Loader } from "lucide-react";
 import { useCreateOrder } from "@/lib/hooks/order/useCreateOreder";
+import { AnimatePresence, motion } from "framer-motion";
+import { Loader, ShoppingCart, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import OrderCartItem from "./OrderCartItem";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button, AnimatedButton } from "@/components/ui/button";
+import { formatCurrency } from "@/lib/utils";
+import { useState } from "react";
 
 const OrderCart = () => {
-  const orderCart = useSelector((state: RootState) => state.orderCart);
-  //const currentTable = orderCart.find((item) => item.orderId === orderId);
+  const { items, subtotal, total } = useSelector(
+    (state: RootState) => state.orderCart
+  );
   const dispatch = useDispatch();
+  const [paymentMethod, setPaymentMethod] = useState<"cash" | "card">("cash");
+
   const { mutateAsync: createOrder, isLoading } = useCreateOrder({
     onSuccess: () => {
-      alert("order created");
+      // Show success message
+      toast.success("Order placed successfully!");
+
+      // Clear the cart
       dispatch(clearCart());
+
+      // Show the success dialog
+      if (typeof window !== "undefined" && (window as any).showOrderSuccess) {
+        (window as any).showOrderSuccess();
+      }
     },
-    onError: () => {
-      alert("error");
+    onError: (error) => {
+      toast.error(`Failed to place order: ${error.message}`);
     },
   });
 
-  const { handleSubmit, register } = useForm<{ table: string }>();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<{ table: string }>();
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      if (items.length === 0) {
+        toast.error(
+          "Your cart is empty. Please add items before placing an order."
+        );
+        return;
+      }
+
       await createOrder({
-        orderItems: orderCart
-          ? orderCart.map((item) => ({
-              Id: item.id,
-              productId: item.id,
-              status: "PROCESSING",
-              quantity: item.quantity,
-            }))
-          : [],
+        orderItems: items.map((item) => ({
+          Id: item.id,
+          productId: item.id,
+          status: "PROCESSING",
+          quantity: item.quantity,
+        })),
         table: data.table,
-        // status: "PROCESSING",
       });
     } catch (error) {
-      console.log(error);
+      console.error("Order creation error:", error);
     }
   });
-  // function calcilateSubTotoal(){
-  //   return currentTable?.orderItems.reduce((prevValue,currentValue)=>{
-  //     return prevValue + currentValue.price * currentValue.quantity
-  //   },0).toString()
-  // }
+
   return (
-    <form
+    <motion.form
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       onSubmit={onSubmit}
-      className="flex w-full flex-col shadow-OrderCartShadow px-[25px] h-[calc(100dvh)] pt-[20px] pb-[30px] "
+      className="flex w-full flex-col h-full bg-white px-6 py-4 overflow-hidden"
     >
-      <span className="mb-[30px] text-[18px] font-[500] leading-[21px]">
-        Customer Information
-      </span>
-      <input
-        {...register("table", { required: true })}
-        className="flex w-full bg-[#F1F1F1] py-[10px] px-[20px] rounded-[100px]"
-        placeholder="Table Number"
-      />
-      <div className="border[#00000080] w-full border-[0.5px] mt-[30px] mb-[30px]" />
-      <span className="text-[18px] font-[500] leading-[21px] mb-[30px]">
-        Order Details
-      </span>
-      <span
-        onClick={() => dispatch(clearCart())}
-        className="text-[14px] font-[500] leading-[21px] mb-[30px] cursor-pointer text-red-600"
-      >
-        Clear cart
-      </span>
-      <div className="flex w-full flex-col hover:overflow-y-auto overflow-y-hidden custom-scrollbar">
-        {orderCart?.map((item) => (
-          <div className="flex w-full flex-col" key={item.id}>
-            <OrderCartDetail item={item} />
-          </div>
-        ))}
-        {(orderCart ?? []).length <= 0 && (
-          <>
-            <div className="flex w-full items-center justify-center h-[200px] text-gray-400 italic">
-              No items in cart
-            </div>
-          </>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold flex items-center gap-2">
+          <ShoppingCart className="h-5 w-5" />
+          Your Order
+        </h2>
+        {items.length > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            type="button"
+            onClick={() => dispatch(clearCart())}
+            className="text-red-500 hover:text-red-700 hover:bg-red-50 flex items-center gap-1"
+          >
+            <Trash2 className="h-4 w-4" />
+            <span>Clear</span>
+          </Button>
         )}
-        <div className="flex w-full flex-col  mt-[30px]">
-          <span className="flex-shrink-0">Order Summary</span>
-          <div className="flex w-full mt-[30px] bg-[#F1F1F1]  flex-col p-[20px]">
-            <div className="grid grid-cols-2 w-full">
-              <span className="text-[#00000080]">Subtotal</span>
-              <span className="flex w-full items-end justify-end text-right text-black">
-                {100000} MMk
-              </span>
-            </div>
-            <div className="grid grid-cols-2 w-full mt-[20px]">
-              <span className="text-[#00000080]">Tax (0%)</span>
-              <span className="flex w-full items-end justify-end text-right text-black">
-                0 MMk
-              </span>
-            </div>
-            <div className="border[#00000080] w-full border-[0.5px] mt-[30px] mb-[20px]" />
-            <div className="grid grid-cols-2 w-full">
-              <span className="">Total</span>
-              <span className="flex w-full items-end justify-end text-right text-black">
-                {1000} MMk
-              </span>
-            </div>
-          </div>
-          <div className="flex w-full mt-[30px]">
-            <button
-              type="submit"
-              className="flex w-full items-center justify-center text-white font-[500] bg-[#009258]"
-            >
-              {isLoading ? (
-                <>
-                  <Loader className="animate-spin" /> Order
-                </>
-              ) : (
-                "Order"
-              )}
-            </button>
-          </div>
+      </div>
+
+      <div className="mb-6">
+        <label htmlFor="table" className="block text-sm font-medium mb-2">
+          Table Number <span className="text-red-500">*</span>
+        </label>
+        <input
+          id="table"
+          {...register("table", {
+            required: "Table number is required",
+            pattern: {
+              value: /^[0-9]+$/,
+              message: "Please enter a valid table number",
+            },
+          })}
+          className="w-full bg-gray-100 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          placeholder="Enter table number"
+        />
+        {errors.table && (
+          <p className="mt-1 text-sm text-red-500">{errors.table.message}</p>
+        )}
+      </div>
+
+      <div className="border-t border-gray-200 py-4 mb-4">
+        <h3 className="font-medium mb-3">Payment Method</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setPaymentMethod("cash")}
+            className={`py-3 px-4 rounded-lg border transition-all ${
+              paymentMethod === "cash"
+                ? "border-green-500 bg-green-50 text-green-700"
+                : "border-gray-200"
+            }`}
+          >
+            Cash
+          </button>
+          <button
+            type="button"
+            onClick={() => setPaymentMethod("card")}
+            className={`py-3 px-4 rounded-lg border transition-all ${
+              paymentMethod === "card"
+                ? "border-green-500 bg-green-50 text-green-700"
+                : "border-gray-200"
+            }`}
+          >
+            Card
+          </button>
         </div>
       </div>
-    </form>
+
+      <div className="border-t border-gray-200 py-4">
+        <h3 className="font-medium mb-3">Order Items</h3>
+        <div className="flex-1 overflow-auto custom-scrollbar">
+          <AnimatePresence>
+            {items.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center justify-center py-8 text-gray-400"
+              >
+                <ShoppingCart className="h-12 w-12 mb-3 opacity-20" />
+                <p className="text-lg">Your cart is empty</p>
+                <p className="text-sm">Add some delicious items to your cart</p>
+              </motion.div>
+            ) : (
+              <div className="space-y-4">
+                {items.map((item) => (
+                  <OrderCartItem key={item.id} item={item} />
+                ))}
+              </div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      <div className="mt-auto pt-4 border-t border-gray-200">
+        <div className="space-y-2 mb-4">
+          <div className="flex justify-between">
+            <span className="text-gray-500">Subtotal</span>
+            <span>{formatCurrency(subtotal)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-500">Tax (0%)</span>
+            <span>{formatCurrency(0)}</span>
+          </div>
+          <div className="flex justify-between font-bold text-lg pt-2">
+            <span>Total</span>
+            <span>{formatCurrency(total)}</span>
+          </div>
+        </div>
+
+        {items.length === 0 && (
+          <Alert variant="warning" className="mb-4">
+            <AlertDescription>
+              Your cart is empty. Please add items before placing an order.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        <AnimatedButton
+          type="submit"
+          className="w-full py-4"
+          size="lg"
+          variant="gradient"
+          isLoading={isLoading}
+          loadingText="Processing Order..."
+          disabled={isLoading || items.length === 0}
+        >
+          Place Order
+        </AnimatedButton>
+      </div>
+    </motion.form>
   );
 };
 
