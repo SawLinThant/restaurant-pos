@@ -1,4 +1,11 @@
-const MinusIcon = () => {
+import { SVGProps } from "react";
+import { cn } from "@/lib/utils";
+
+interface MinusIconProps extends SVGProps<SVGSVGElement> {
+  className?: string;
+}
+
+const MinusIcon = ({ className, ...props }: MinusIconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,7 +13,8 @@ const MinusIcon = () => {
       height="2"
       viewBox="0 0 14 2"
       fill="none"
-      className="z-10 stroke-white"
+      className={cn("z-10 stroke-white", className)}
+      {...props}
     >
       <path
         d="M1 1H13"
