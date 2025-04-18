@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -17,17 +18,31 @@ interface CustomSelectProps {
   options: option[];
   label: string;
   setOptions: (option: string) => void;
+  initialValue?: string;
 }
 
 export function CustomSelect({
   options,
   label,
   setOptions,
+  initialValue,
 }: CustomSelectProps) {
+  const [value, setValue] = useState<string>("");
+
+  // Set initial value if provided
+  useEffect(() => {
+    if (initialValue) {
+      setValue(initialValue);
+      setOptions(initialValue);
+    }
+  }, [initialValue, setOptions]);
+
   return (
     <Select
-      onValueChange={(value) => {
-        setOptions(value); 
+      value={value}
+      onValueChange={(selectedValue) => {
+        setValue(selectedValue);
+        setOptions(selectedValue);
       }}
     >
       <SelectTrigger className="w-full border-gray-600 hover:border-gray-600">
@@ -37,10 +52,7 @@ export function CustomSelect({
         <SelectGroup>
           <SelectLabel>{label}</SelectLabel>
           {options.map((option, index) => (
-            <SelectItem
-              key={index}
-              value={option.value}
-            >
+            <SelectItem key={index} value={option.value}>
               {option.label}
             </SelectItem>
           ))}

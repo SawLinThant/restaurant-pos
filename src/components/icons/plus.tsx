@@ -1,4 +1,11 @@
-const PlusIcon = () => {
+import { SVGProps } from "react";
+import { cn } from "@/lib/utils";
+
+interface PlusIconProps extends SVGProps<SVGSVGElement> {
+  className?: string;
+}
+
+const PlusIcon = ({ className, ...props }: PlusIconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,6 +13,8 @@ const PlusIcon = () => {
       height="16"
       viewBox="0 0 16 16"
       fill="none"
+      className={cn(className)}
+      {...props}
     >
       <path
         xmlns="http://www.w3.org/2000/svg"
@@ -19,4 +28,4 @@ const PlusIcon = () => {
   );
 };
 
-export default PlusIcon
+export default PlusIcon;
