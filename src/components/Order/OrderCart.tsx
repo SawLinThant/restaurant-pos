@@ -74,7 +74,7 @@ const OrderCart = () => {
       onSubmit={onSubmit}
       className="flex w-full flex-col h-full bg-white px-6 py-4 overflow-hidden"
     >
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-start mb-6 gap-x-4">
         <h2 className="text-xl font-bold flex items-center gap-2">
           <ShoppingCart className="h-5 w-5" />
           Your Order
@@ -95,20 +95,25 @@ const OrderCart = () => {
 
       <div className="mb-6">
         <label htmlFor="table" className="block text-sm font-medium mb-2">
-          Table Number <span className="text-red-500">*</span>
+          Table Identifier <span className="text-red-500">*</span>
         </label>
         <input
           id="table"
           {...register("table", {
-            required: "Table number is required",
-            pattern: {
-              value: /^[0-9]+$/,
-              message: "Please enter a valid table number",
+            required: "Table number/name is required",
+            maxLength: {
+              value: 20,
+              message: "Table identifier must be less than 20 characters",
             },
           })}
           className="w-full bg-gray-100 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-          placeholder="Enter table number"
+          placeholder="Enter table number or name"
         />
+        {!errors.table && (
+          <p className="mt-1 text-xs text-gray-500">
+            You can enter a table number, name, or any identifier
+          </p>
+        )}
         {errors.table && (
           <p className="mt-1 text-sm text-red-500">{errors.table.message}</p>
         )}

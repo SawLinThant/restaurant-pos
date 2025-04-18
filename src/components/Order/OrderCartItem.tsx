@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 interface OrderCartItemProps {
   item: OrderItemProps;
@@ -76,11 +75,9 @@ const OrderCartItem = ({ item }: OrderCartItemProps) => {
           </div>
 
           <div className="flex items-center">
-            <Button
+            <button
               type="button"
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 rounded-full"
+              className="bg-gray-100 rounded-full p-2"
               onClick={handleDecrement}
             >
               {item.quantity === 1 ? (
@@ -88,19 +85,17 @@ const OrderCartItem = ({ item }: OrderCartItemProps) => {
               ) : (
                 <Minus className="h-4 w-4" />
               )}
-            </Button>
+            </button>
 
             <span className="w-8 text-center font-medium">{item.quantity}</span>
 
-            <Button
+            <button
               type="button"
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 rounded-full"
+              className="bg-gray-100 rounded-full p-2"
               onClick={handleIncrement}
             >
               <Plus className="h-4 w-4" />
-            </Button>
+            </button>
           </div>
         </div>
       </div>

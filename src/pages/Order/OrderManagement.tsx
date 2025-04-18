@@ -20,9 +20,9 @@ const OrderManagement = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="flex w-full lg:mt-0 md:mt-0 mt-[4rem]"
+        className="flex w-full lg:mt-0 md:mt-0 mt-[4rem] relative"
       >
-        <div className="flex w-full flex-col gap-y-6 p-6 bg-primary h-[calc(100vh-15vh)] overflow-y-auto overflow-x-hidden custom-scrollbar">
+        <div className="flex w-full flex-col gap-y-6 p-6 bg-primary h-[calc(100vh-15vh)] overflow-y-auto overflow-x-hidden scrollbar-none">
           <div className="flex w-full justify-between items-center">
             <motion.h1
               initial={{ opacity: 0, x: -20 }}
@@ -33,7 +33,10 @@ const OrderManagement = () => {
               Food Menu
             </motion.h1>
 
-            <OrderMenu />
+            <div className="absolute right-4 top-2 z-50 sm:block hidden">
+              {" "}
+              <OrderMenu />
+            </div>
           </div>
 
           <motion.div

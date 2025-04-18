@@ -8,8 +8,8 @@ const MenuOptionBar = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className="w-full overflow-x-auto bg-gray-100 rounded-full py-1 px-2 shadow-inner">
-      <div className="flex min-w-max">
+    <div className="w-full sm:w-fit overflow-x-auto bg-gray-100 rounded-full py-1 px-2 shadow-inner scrollbar-none">
+      <div className="flex  gap-x-1  w-full">
         {options.map((option, index) => (
           <motion.button
             key={option.id}
@@ -30,7 +30,9 @@ const MenuOptionBar = () => {
                 transition={{ type: "spring", duration: 0.5 }}
               />
             )}
-            <span className="relative z-10 font-medium">{option.name}</span>
+            <span className="relative z-10 font-medium text-nowrap">
+              {option.name}
+            </span>
           </motion.button>
         ))}
       </div>

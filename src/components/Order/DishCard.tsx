@@ -2,7 +2,7 @@ import { Product } from "@/lib/hooks/product/useGetProductList";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { motion } from "framer-motion";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import {
   addToCart,
   removeFromCart,
@@ -109,27 +109,27 @@ const DishCard = ({ product }: DishCardProps) => {
           <div className="flex items-center">
             {quantity > 0 ? (
               <div className="flex items-center gap-3">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-9 w-9 rounded-full"
+                <button
+                  type="button"
+                  className="bg-gray-100 rounded-full p-2"
                   onClick={handleDecrement}
                 >
-                  <Minus className="h-4 w-4" />
-                </Button>
+                  {quantity === 1 ? (
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  ) : (
+                    <Minus className="h-4 w-4 text-green-600" />
+                  )}
+                </button>
 
-                <span className="font-semibold w-4 text-center">
-                  {quantity}
-                </span>
+                <span className="w-8 text-center font-medium">{quantity}</span>
 
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-9 w-9 rounded-full"
+                <button
+                  type="button"
+                  className="bg-gray-100 rounded-full p-2"
                   onClick={handleIncrement}
                 >
-                  <Plus className="h-4 w-4" />
-                </Button>
+                  <Plus className="h-4 w-4 text-green-600" />
+                </button>
               </div>
             ) : (
               <AnimatedButton
