@@ -1,135 +1,149 @@
 import { Product } from "@/lib/hooks/product/useGetProductList";
-import DotIcon from "../icons/dot";
 import { useDispatch, useSelector } from "react-redux";
-import MinusIcon from "../icons/minus";
-import PlusIcon from "../icons/plus";
+import { RootState } from "@/store/store";
+import { motion } from "framer-motion";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import {
   addToCart,
   removeFromCart,
   updateCartItemQuantity,
 } from "@/store/slices/orderCartSlice";
-
-import { RootState } from "@/store/store";
-import clsx from "clsx";
+import { formatCurrency } from "@/lib/utils";
+import { Button, AnimatedButton } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface DishCardProps {
   product: Product;
 }
 
 const DishCard = ({ product }: DishCardProps) => {
-  const cart = useSelector((state: RootState) => state.orderCart);
-
-  const quantity = cart.find((item) => item.id === product.id)?.quantity || 0;
+  const { items } = useSelector((state: RootState) => state.orderCart);
+  const cartItem = items.find((item) => item.id === product.id);
+  const quantity = cartItem?.quantity || 0;
   const dispatch = useDispatch();
-  return (
-    <div
-      className={clsx(
-        "flex w-full flex-grow  flex-shrink flex-col bg-[#F6F6F6] rounded-[10px]  pt-[25px] pl-[25px] pr-[15px] pb-[15px]",
-        { "border-2 border-[#009258]": quantity > 0 }
-      )}
-      key={product.id}
-    >
-      <div className="flex lg:flex-row flex-col overflow-y-auto">
-        <div className=" lg:w-1/2 w-full flex-shrink">
-          <img
-            src={product.image || "/dishes/steak.jpg"}
-            width={256}
-            height={128}
-            className="customLg:w-[12.125rem] md:w-full h-[8.125rem] rounded-[10px] object-cover align-top"
-          />
-        </div>
-        <div className=" lg:w-1/2 w-full">
-        <div className="w-full flex flex-col items-start lg:px-4 lg:py-0 py-4">
-          <span className="text-[18px] font-[500]">{product.name}</span>
-          <div className="text-[11px] font-[500] text-[#00000080] h-[45%] hover:overflow-y-auto overflow-y-hidden custom-scrollbar leading-[15px]">
-            {product.description}
-          </div>
-          <div className=" text-[11px] mt-[10px] gap-x-4 flex items-center leading-[15px] text-[#00000080] font-[500]">
-            <span>15 available</span>
-            <div className="flex items-center gap-x-1">
-              <DotIcon />
-              <span>32 Sold</span>
-            </div>
-          </div>
-        </div>
-        </div>
-      </div>
-      <div className="flex lg:flex-row flex-col gap-3 lg:items-center items-start lg:mt-6 mt-2">
-        <div className="lg:w-1/2 w-full flex">
-          <span className="font-[500] text-[18px]">{product.price}MMK</span>
-        </div>
-        <div className="lg:w-1/2 w-full">
-          {/* <button 
-            onClick={() =>
-              dispatch(
-                addToCart({
-                  id: product.id,
-                  name: product.name,
-                  price: product.price,
-                  image: product.image,
-                  quantity: 1,
-                })
-              )
-            }
-            className="bg-[#009258] py-[7px] px-[44px] text-[16p] font-[500] text-white rounded-[10px]"
-          >
-            Add
-          </button> */}
-          <div className="flex w-full lg:px-4 items-center justify-start gap-x-[20px]">
-            <div
-              onClick={() => {
-                if (quantity > 1) {
-                  dispatch(
-                    updateCartItemQuantity({
-                      cartItemId: product.id,
-                      quantity: quantity - 1,
-                    })
-                  );
-                } else {
-                  dispatch(
-                    removeFromCart({
-                      cartItemId: product.id,
-                    })
-                  );
-                }
-              }}
-              className="rounded-full flex  bg-[#009258] w-[35px] h-[35px] items-center justify-center"
-            >
-              <MinusIcon />
-            </div>
-            <span>{quantity || 0}</span>
-            <div
-              onClick={() => {
-                if (quantity > 0) {
-                  dispatch(
-                    updateCartItemQuantity({
-                      cartItemId: product.id,
-                      quantity: quantity + 1,
-                    })
-                  );
-                } else {
-                  dispatch(
-                    addToCart({
-                      // tableId: tableNo,
-                      // orderId: orderId,
 
-                      id: product.id,
-                      name: product.name,
-                      price: product.price,
-                      image: product.image,
-                      quantity: 1,
-                    })
-                  );
-                }
-              }}
-              className="rounded-full flex  bg-[#009258] w-[35px] h-[35px] items-center justify-center"
-            >
-              <PlusIcon />
-            </div>
+  const handleAddToCart = () => {
+    dispatch(
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1,
+      })
+    );
+  };
+
+  const handleIncrement = () => {
+    if (quantity > 0) {
+      dispatch(
+        updateCartItemQuantity({
+          cartItemId: product.id,
+          quantity: quantity + 1,
+        })
+      );
+    } else {
+      handleAddToCart();
+    }
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      dispatch(
+        updateCartItemQuantity({
+          cartItemId: product.id,
+          quantity: quantity - 1,
+        })
+      );
+    } else if (quantity === 1) {
+      dispatch(
+        removeFromCart({
+          cartItemId: product.id,
+        })
+      );
+    }
+  };
+
+  return (
+    <motion.div
+      whileHover={{ y: -5 }}
+      className={cn(
+        "w-full h-full flex flex-col bg-white rounded-xl overflow-hidden shadow-md transition-all duration-200",
+        quantity > 0 && "ring-2 ring-green-500 shadow-lg"
+      )}
+    >
+      <div className="relative w-full pt-[56%] overflow-hidden bg-gray-100">
+        <img
+          src={product.image || "/dishes/steak.jpg"}
+          alt={product.name}
+          className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+        />
+
+        {quantity > 0 && (
+          <div className="absolute top-3 right-3 bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold shadow-lg">
+            {quantity}
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col flex-1 p-4">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-bold text-lg line-clamp-1">{product.name}</h3>
+          <span className="font-bold text-green-600">
+            {formatCurrency(product.price)}
+          </span>
+        </div>
+
+        <p className="text-gray-600 text-sm line-clamp-2 mb-4 flex-1">
+          {product.description ||
+            "Delicious dish prepared with fresh ingredients."}
+        </p>
+
+        <div className="flex justify-between items-center mt-auto">
+          <div className="text-xs text-gray-500 flex items-center">
+            <span className="mr-2">15 available</span>
+            <span className="w-1 h-1 rounded-full bg-gray-400 inline-block"></span>
+            <span className="ml-2">32 sold</span>
+          </div>
+
+          <div className="flex items-center">
+            {quantity > 0 ? (
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  className="bg-gray-100 rounded-full p-2"
+                  onClick={handleDecrement}
+                >
+                  {quantity === 1 ? (
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  ) : (
+                    <Minus className="h-4 w-4 text-green-600" />
+                  )}
+                </button>
+
+                <span className="w-8 text-center font-medium">{quantity}</span>
+
+                <button
+                  type="button"
+                  className="bg-gray-100 rounded-full p-2"
+                  onClick={handleIncrement}
+                >
+                  <Plus className="h-4 w-4 text-green-600" />
+                </button>
+              </div>
+            ) : (
+              <AnimatedButton
+                onClick={handleAddToCart}
+                variant="gradient"
+                size="sm"
+              >
+                Add to Cart
+              </AnimatedButton>
+            )}
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
