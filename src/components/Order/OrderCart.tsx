@@ -72,7 +72,7 @@ const OrderCart = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onSubmit={onSubmit}
-      className="flex w-full flex-col h-full bg-white px-6 py-4 overflow-hidden"
+      className="flex w-full flex-col flex-1 h-[100dvh] bg-white px-6 py-4 overflow-y-auto scrollbar-none"
     >
       <div className="flex items-center justify-start mb-6 gap-x-4">
         <h2 className="text-xl font-bold flex items-center gap-2">

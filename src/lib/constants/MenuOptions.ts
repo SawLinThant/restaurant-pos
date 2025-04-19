@@ -44,7 +44,7 @@ export const OrderStatus = [
     label: "Served",
   },
   {
-    value: "COMPLETE",
+    value: "COMPLETED",
     label: "Complete",
   },
 ]
