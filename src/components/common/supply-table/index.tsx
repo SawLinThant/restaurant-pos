@@ -9,34 +9,32 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "@/components/ui/button";
-
-import { useGetOrderList } from "@/lib/hooks/product/useGetOrderList";
-import { OrderResponse } from "@/lib/type/CommonType";
+import { useGetDailyBuyingList } from "@/lib/hooks/daily-buying/useGetDailyBuyingList";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// interface DailyBuying {
-//   Id: string;
-//   particular: string;
-//   unit: string;
-//   price: number;
-//   quantity: number;
-//   Amount: number;
-//   createdDate: string;
-//   updatedDate: string;
-// }
-
-interface DailyOrderTableProps {
-  data?: OrderResponse["data"][];
-  itemsPerPage?: number;
-  startDate?: string;
-  endDate?: string;
+interface DailyBuying {
+  Id: string;
+  particular: string;
+  unit: string;
+  price: number;
+  quantity: number;
+  Amount: number;
+  createdDate: string;
+  updatedDate: string;
 }
 
-const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
+interface SupplyTableProps {
+  data?: DailyBuying[];
+  itemsPerPage?: number;
+  particularFilter?: string;
+  date?: string;
+}
+
+const SupplyTable: React.FC<SupplyTableProps> = ({
   data: initialData,
   itemsPerPage = 10,
-  startDate,
-  endDate,
+  particularFilter,
+  date,
 }) => {
   const [page, setPage] = useState(1);
 
@@ -45,10 +43,10 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
     () => ({
       skip: (page - 1) * itemsPerPage,
       take: itemsPerPage,
-      startDate,
-      endDate,
+      particular: particularFilter,
+      date: date,
     }),
-    [page, itemsPerPage, startDate, endDate]
+    [page, itemsPerPage, particularFilter, date]
   );
 
   // Configure query with proper caching strategy
@@ -56,7 +54,7 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
     data: fetchedData,
     isLoading,
     error,
-  } = useGetOrderList(queryParams, {
+  } = useGetDailyBuyingList(queryParams, {
     enabled: !initialData,
     keepPreviousData: true, // Keep showing previous data while fetching new data
     staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
@@ -66,13 +64,18 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
 
   // Memoize derived data to prevent recalculations
   const data = useMemo(
-    () => initialData || fetchedData?.data?.orders || [],
-    [initialData, fetchedData?.data?.orders]
+    () => initialData || fetchedData?.data?.DailyBuyings || [],
+    [initialData, fetchedData?.data?.DailyBuyings]
   );
 
   const totalCount = useMemo(
     () => fetchedData?.data?.totalCounts || initialData?.length || 0,
     [fetchedData?.data?.totalCounts, initialData?.length]
+  );
+
+  const totalPrice = useMemo(
+    () => fetchedData?.data?.totalPrice || 0,
+    [fetchedData?.data?.totalPrice]
   );
 
   const totalPages = useMemo(
@@ -99,34 +102,36 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
     <div className="w-full flex flex-col">
       <div className="flex items-center gap-x-2">
         <span className="text-[1.2rem] text-black font-semibold">{`Total:`}</span>
-        <span className="text-[1rem] text-black font-[500]">
-          {fetchedData?.data?.totalPrice || 0}
-        </span>
+        <span className="text-[1rem] text-black font-[500]">{totalPrice}</span>
       </div>
-      <div className="w-full overflow-y-auto h-[250px] relative scrollbar-none">
-        <Table className="border-b">
+      <div className="rounded-t-md">
+        <Table>
           <TableHeader>
             <TableRow className="bg-secondary text-white font-semibold hover:bg-secondary">
               <TableHead className="w-12 border text-white border-[#009258] text-center py-4">
                 No
               </TableHead>
               <TableHead className="w-[17rem] border text-white border-[#009258] border-l-0 text-center">
-                Order Id
+                Particular
               </TableHead>
               <TableHead className="border-y border-r text-white border-[#009258] text-center">
-                Status
+                Unit
               </TableHead>
               <TableHead className="border-y border-r text-white border-[#009258] text-center">
-                Table
+                Qty
               </TableHead>
               <TableHead className="border-y border-r text-white border-[#009258] text-center">
-                Total Amount
+                Price
               </TableHead>
-              {/* <TableHead className="border text-white border-[#009258] text-center">
-                Updated Date
-              </TableHead> */}
+              <TableHead className="border text-white border-[#009258] text-center">
+                Amount
+              </TableHead>
             </TableRow>
           </TableHeader>
+        </Table>
+      </div>
+      <div className="overflow-y-auto h-[200px] relative scrollbar-none">
+        <Table>
           <TableBody>
             {!isLoading &&
               data.map((item, index) => (
@@ -137,17 +142,17 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
                   <TableCell className="w-12 p-2 border">
                     {(page - 1) * itemsPerPage + index + 1}
                   </TableCell>
-                  <TableCell className="w-[17rem] border">{item.Id}</TableCell>
-                  <TableCell className="border">{item.status}</TableCell>
-                  <TableCell className="border">{item.table}</TableCell>
-                  <TableCell className="border">
-                    {item.orderItems?.reduce((previous, current) => {
-                      return (
-                        previous + current.quantity * current.product.price
-                      );
-                    }, 0)}
+                  <TableCell className="w-[17rem] border">
+                    {item.particular}
                   </TableCell>
-                  {/* <TableCell className="border">{item.updatedDate}</TableCell> */}
+                  <TableCell className="border">{item.unit}</TableCell>
+                  <TableCell className="border">{item.quantity}</TableCell>
+                  <TableCell className="border">
+                    {item.price.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="border">
+                    {item.Amount.toLocaleString()}
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -175,16 +180,18 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
                     <TableCell className="border">
                       <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
                     </TableCell>
+                    <TableCell className="border">
+                      <Skeleton className="w-full h-[20px] rounded-none bg-gray-100" />
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
           )}
         </Table>
       </div>
-
       {!isLoading && data.length < 1 && (
         <div className="flex w-full items-center justify-center py-4 border-x border-b">
-          <span className="text-gray-500">No order available</span>
+          <span className="text-gray-500">No supply data available</span>
         </div>
       )}
 
@@ -220,4 +227,4 @@ const DailyOrderTable: React.FC<DailyOrderTableProps> = ({
 };
 
 // Memoize the entire component to prevent unnecessary re-renders
-export default React.memo(DailyOrderTable);
+export default React.memo(SupplyTable);

@@ -32,7 +32,7 @@ export const AdminRoutes:Routeprops[] = [
     },
     {
         id: 4,
-        label:'Inventory',
+        label:'Supply & Demand',
         path: 'inventory',
         icon: <MdOutlineInventory2 size={20}/>
     },
