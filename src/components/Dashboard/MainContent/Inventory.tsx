@@ -1,12 +1,11 @@
 //import { ProductChart } from "@/components/common/product-chart";
-import DailyOrderTable from "@/components/common/daily-order-table";
-import SupplyTable from "@/components/common/supply-table";
+import UnifiedInventoryTable from "@/components/common/unified-inventory-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCreateBulkDailyBuying } from "@/lib/hooks/daily-buying/useCreateBulkDailyBuying";
 import { DailyItem } from "@/lib/type/CommonType";
 import { useQueryClient } from "@tanstack/react-query";
-import { Calendar, CalendarIcon, Loader } from "lucide-react";
+import { CalendarIcon, Loader } from "lucide-react";
 import React, { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
@@ -46,6 +45,20 @@ const Inventory: React.FC = () => {
         toast.error("Fail to add items");
       },
     });
+
+  // Create a function to handle date selection that invalidates both queries
+  const handleDateChange = useCallback(
+    (date: Date | undefined) => {
+      setSelectedDate(date);
+
+      // Invalidate both queries when date changes
+      if (queryClient) {
+        queryClient.invalidateQueries(["get-daily-buying-list"]);
+        queryClient.invalidateQueries(["orderList"]);
+      }
+    },
+    [queryClient]
+  );
 
   // Memoize form submission handler
   const handleAddList = useCallback(
@@ -134,20 +147,6 @@ const Inventory: React.FC = () => {
     []
   );
 
-  // Create a function to handle date selection that invalidates both queries
-  const handleDateChange = useCallback(
-    (date: Date | undefined) => {
-      setSelectedDate(date);
-
-      // Invalidate both queries when date changes
-      if (queryClient) {
-        queryClient.invalidateQueries(["get-daily-buying-list"]);
-        queryClient.invalidateQueries(["orderList"]);
-      }
-    },
-    [queryClient]
-  );
-
   return (
     <div className="w-full h-full flex flex-col gap-4 overflow-y-auto">
       <ToastContainer autoClose={3000} position="top-center" />
@@ -210,52 +209,14 @@ const Inventory: React.FC = () => {
         initial="hidden"
         animate="show"
       >
-        <div className="w-full flex flex-col gap-12">
-          <motion.div
-            className="w-full flex flex-col gap-5"
-            variants={itemAnimation}
-          >
-            <div className="w-full flex flex-row items-center justify-between">
-              <h2 className="font-semibold text-lg">Supply List</h2>
-              <div className="flex flex-row items-center gap-4">
-                <Button className="rounded-md bg-secondary text-white border hover:bg-secondary/90">
-                  Export CSV
-                </Button>
-                <Button className="rounded-md bg-secondary text-white border hover:bg-secondary/90">
-                  Export PDF
-                </Button>
-              </div>
-            </div>
-            <SupplyTable
-              itemsPerPage={5}
-              particularFilter=""
-              date={formattedDate}
-            />
-          </motion.div>
-
-          <motion.div
-            className="w-full flex flex-col gap-5"
-            variants={itemAnimation}
-          >
-            <div className="w-full flex flex-row items-center justify-between">
-              <h2 className="font-semibold text-lg">Daily Order</h2>
-              <div className="flex flex-row items-center gap-4">
-                <Button className="rounded-md bg-secondary text-white border hover:bg-secondary/90">
-                  Export CSV
-                </Button>
-                <Button className="rounded-md bg-secondary text-white border hover:bg-secondary/90">
-                  Export PDF
-                </Button>
-              </div>
-            </div>
-            <DailyOrderTable
-              itemsPerPage={5}
-              startDate={formattedDate}
-              endDate={formattedDate}
-            />
+        {/* Main Content - UnifiedInventoryTable */}
+        <div className="w-full flex flex-col gap-6">
+          <motion.div className="w-full" variants={itemAnimation}>
+            <UnifiedInventoryTable date={formattedDate} itemsPerPage={5} />
           </motion.div>
         </div>
 
+        {/* Side Panel - Add Items */}
         <motion.div
           className="w-2/6 min-h-40 flex flex-col gap-8"
           variants={itemAnimation}
