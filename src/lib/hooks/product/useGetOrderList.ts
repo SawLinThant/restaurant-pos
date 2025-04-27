@@ -28,14 +28,16 @@ type OrderListQueryOptions = Omit<
 interface PaginationParams {
   take: number;
   skip: number;
+  startDate?: string;
+  endDate?: string;
 }
 
 export const useGetOrderList = (
-  { take, skip }: PaginationParams,
+  { take, skip, startDate, endDate }: PaginationParams,
   options?: OrderListQueryOptions
 ) => {
   return useQuery<OrderListResponse, AxiosError<ApiError>>({
-    queryKey: ["orderList", take, skip],
+    queryKey: ["orderList", take, skip, startDate, endDate],
     queryFn: async () => {
       const response = await axios.get(`${baseUrl}/Order/getList`, {
         headers: {
@@ -44,6 +46,8 @@ export const useGetOrderList = (
         params: {
           take,
           skip,
+          startDate,
+          endDate,
         },
       });
       // console.log("response:",response.data)

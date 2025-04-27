@@ -38,6 +38,7 @@ type GetDailyBuyingListOptions = Omit<
 export const useGetDailyBuyingList = (
   params: {
     particular?: string;
+    date?: string; // YYYY-MM-DD
   } & PaginationParams,
   options?: Partial<GetDailyBuyingListOptions>
 ) => {

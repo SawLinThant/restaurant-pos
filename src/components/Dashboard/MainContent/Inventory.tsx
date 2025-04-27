@@ -1,22 +1,33 @@
 //import { ProductChart } from "@/components/common/product-chart";
 import DailyOrderTable from "@/components/common/daily-order-table";
-import VoucherTable from "@/components/common/voucher-table";
+import SupplyTable from "@/components/common/supply-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCreateBulkDailyBuying } from "@/lib/hooks/daily-buying/useCreateBulkDailyBuying";
 import { DailyItem } from "@/lib/type/CommonType";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader } from "lucide-react";
-import React, { useState } from "react";
+import { Calendar, CalendarIcon, Loader } from "lucide-react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
-//import { useNavigate } from "react-router-dom";
+import { format, startOfDay } from "date-fns";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { motion } from "framer-motion";
 
 const Inventory: React.FC = () => {
   const [createDailyCostLoading, setCreateDailyCostLoading] =
     useState<boolean>(false);
-  //const navigate = useNavigate();
   const [dailyBuyList, setDailyBuyList] = useState<DailyItem[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    startOfDay(new Date())
+  );
+
   const {
     register: dailyCostRegister,
     handleSubmit: createMenuSubmit,
@@ -29,123 +40,227 @@ const Inventory: React.FC = () => {
       onSuccess: async () => {
         toast.success("Items added successfully");
         await queryClient.invalidateQueries(["get-daily-buying-list"]);
+        setDailyBuyList([]); // Clear the list after successful submission
       },
       onError: () => {
         toast.error("Fail to add items");
       },
     });
 
-  const handleAddList = createMenuSubmit(async (data) => {
-    const newItem: DailyItem = {
-      id: Date.now().toString(),
-      name: data.name,
-      amount: data.amount,
-      quantity: data.quantity,
-      unit: data.unit,
-      price: data.price,
-      cost: data.cost,
-    };
+  // Memoize form submission handler
+  const handleAddList = useCallback(
+    createMenuSubmit(async (data) => {
+      const newItem: DailyItem = {
+        id: Date.now().toString(),
+        name: data.name,
+        amount: data.amount,
+        quantity: data.quantity,
+        unit: data.unit,
+        price: data.price,
+        cost: data.cost,
+      };
 
-    setDailyBuyList((prevList) => [...prevList, newItem]);
-    resetForm();
-  });
-  const handleSubmit = () => {
+      setDailyBuyList((prevList) => [...prevList, newItem]);
+      resetForm();
+    }),
+    [createMenuSubmit, resetForm]
+  );
+
+  // Memoize submit handler
+  const handleSubmit = useCallback(() => {
     setCreateDailyCostLoading(false);
-  };
-  const removeDailyList = (id: string) => {
-    setDailyBuyList((prev) => prev.filter((list) => list.id !== id));
-  };
+  }, []);
 
-  const handleCreateDailybuying = () => {
-    console.log(dailyBuyList);
-    createDailyBuyingList({
-      DailyBuyings: dailyBuyList.map((db) => {
-        return {
-          particular: db.name,
-          unit: db.unit,
-          price: parseFloat(db.price),
-          quantity: parseInt(db.quantity),
-          Amount: parseFloat(db.cost),
-        };
-      }),
-    });
-  };
+  // Memoize removal handler
+  const removeDailyList = useCallback((id: string) => {
+    setDailyBuyList((prev) => prev.filter((list) => list.id !== id));
+  }, []);
+
+  // Memoize create daily buying handler
+  const handleCreateDailybuying = useCallback(() => {
+    if (dailyBuyList.length === 0) return;
+
+    const mappedData = dailyBuyList.map((db) => ({
+      particular: db.name,
+      unit: db.unit,
+      price: parseFloat(db.price),
+      quantity: parseInt(db.quantity),
+      Amount: parseFloat(db.cost),
+    }));
+
+    createDailyBuyingList({ DailyBuyings: mappedData });
+  }, [dailyBuyList, createDailyBuyingList]);
+
+  // Memoize date clear handler - updated to reset to today's date
+  const handleClearDate = useCallback(() => {
+    // Reset to today instead of undefined
+    setSelectedDate(startOfDay(new Date()));
+
+    // Invalidate both queries when resetting date
+    if (queryClient) {
+      queryClient.invalidateQueries(["get-daily-buying-list"]);
+      queryClient.invalidateQueries(["orderList"]);
+    }
+  }, [queryClient]);
+
+  // Memoize formatted date to prevent recreation on every render
+  const formattedDate = useMemo(
+    () =>
+      selectedDate
+        ? format(selectedDate, "yyyy-MM-dd")
+        : format(startOfDay(new Date()), "yyyy-MM-dd"),
+    [selectedDate]
+  );
+
+  // Memoize the animation variants
+  const containerAnimation = useMemo(
+    () => ({
+      hidden: { opacity: 0 },
+      show: {
+        opacity: 1,
+        transition: {
+          staggerChildren: 0.1,
+        },
+      },
+    }),
+    []
+  );
+
+  const itemAnimation = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: 20 },
+      show: { opacity: 1, y: 0 },
+    }),
+    []
+  );
+
+  // Create a function to handle date selection that invalidates both queries
+  const handleDateChange = useCallback(
+    (date: Date | undefined) => {
+      setSelectedDate(date);
+
+      // Invalidate both queries when date changes
+      if (queryClient) {
+        queryClient.invalidateQueries(["get-daily-buying-list"]);
+        queryClient.invalidateQueries(["orderList"]);
+      }
+    },
+    [queryClient]
+  );
 
   return (
     <div className="w-full h-full flex flex-col gap-4 overflow-y-auto">
       <ToastContainer autoClose={3000} position="top-center" />
-      <div className="w-full flex items-center justify-start">
+      <div className="w-full flex items-center justify-between">
         <h2 className="font-semibold text-2xl">Inventory</h2>
+
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="flex items-center gap-3"
+        >
+          <span className="text-sm font-medium">Filter by Date:</span>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-[200px] justify-start text-left font-normal border border-gray-300 hover:bg-gray-100",
+                  !selectedDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {selectedDate ? (
+                  format(selectedDate, "MMM dd, yyyy")
+                ) : (
+                  <span>Today</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <CalendarComponent
+                mode="single"
+                selected={selectedDate}
+                onSelect={handleDateChange}
+                initialFocus
+                defaultMonth={selectedDate}
+              />
+            </PopoverContent>
+          </Popover>
+
+          {selectedDate &&
+            format(selectedDate, "yyyy-MM-dd") !==
+              format(startOfDay(new Date()), "yyyy-MM-dd") && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClearDate}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                Reset to Today
+              </Button>
+            )}
+        </motion.div>
       </div>
 
-      <div className="w-full flex flex-row gap-6">
-        {/* <div className="w-4/6 min-h-40 flex flex-col">
-           <div className="w-full flex flex-row gap-4">
-           <div className="w-full min-h-44">
-              <ProductChart/>
-            </div>
-            <div className="w-full max-w-[250px] min-h-44 p-8 rounded- border flex flex-col gap-10 bg-slate-100 shadow-md">
-              <div className="w-full min-h-24 rounded-lg border relative flex items-center justify-center bg-white shadow-lg">
-                <div className="w-28 h-7 border rounded-md absolute top-0 left-2 -translate-y-4 bg-secondary text-white text-center font-semibold">
-                  Daily Cost
-                </div>
-                <div className="flex flex-row items-center">
-                  <span><strong>1000</strong> MMK</span>
-                </div>
-              </div>
-              <div className="w-full min-h-24 rounded-lg border relative flex items-center justify-center bg-white shadow-lg">
-                <div className="w-28 h-7 border rounded-md absolute top-0 left-2 -translate-y-4 bg-secondary text-white text-center font-semibold">
-                  Daily Sell
-                </div>
-                <div className="flex flex-row items-center">
-                  <span><strong>1500</strong> MMK</span>
-                </div>
-              </div>
-              <div className="w-full min-h-24 rounded-lg border relative flex items-center justify-center bg-white shadow-lg">
-                <div className="w-28 h-7 border rounded-md absolute top-0 left-2 -translate-y-4 bg-secondary text-white text-center font-semibold">
-                  Daily Profit
-                </div>
-                <div className="flex flex-row items-center">
-                  <span><strong>500</strong> MMK</span>
-                </div>
-              </div>
-            </div>
-            
-           </div>
-        </div> */}
+      <motion.div
+        className="w-full flex flex-row gap-6"
+        variants={containerAnimation}
+        initial="hidden"
+        animate="show"
+      >
         <div className="w-full flex flex-col gap-12">
-          <div className="w-full flex flex-col gap-5">
+          <motion.div
+            className="w-full flex flex-col gap-5"
+            variants={itemAnimation}
+          >
             <div className="w-full flex flex-row items-center justify-between">
-              <h2 className="font-semibold text-lg">Daily Buy List</h2>
+              <h2 className="font-semibold text-lg">Supply List</h2>
               <div className="flex flex-row items-center gap-4">
-                <Button className="rounded-md bg-secondary text-white border">
+                <Button className="rounded-md bg-secondary text-white border hover:bg-secondary/90">
                   Export CSV
                 </Button>
-                <Button className="rounded-md bg-secondary text-white border">
+                <Button className="rounded-md bg-secondary text-white border hover:bg-secondary/90">
                   Export PDF
                 </Button>
               </div>
             </div>
-            <VoucherTable itemsPerPage={5} particularFilter="" />
-          </div>
-          <div className="w-full flex flex-col gap-5">
+            <SupplyTable
+              itemsPerPage={5}
+              particularFilter=""
+              date={formattedDate}
+            />
+          </motion.div>
+
+          <motion.div
+            className="w-full flex flex-col gap-5"
+            variants={itemAnimation}
+          >
             <div className="w-full flex flex-row items-center justify-between">
               <h2 className="font-semibold text-lg">Daily Order</h2>
               <div className="flex flex-row items-center gap-4">
-                <Button className="rounded-md bg-secondary text-white border">
+                <Button className="rounded-md bg-secondary text-white border hover:bg-secondary/90">
                   Export CSV
                 </Button>
-                <Button className="rounded-md bg-secondary text-white border">
+                <Button className="rounded-md bg-secondary text-white border hover:bg-secondary/90">
                   Export PDF
                 </Button>
               </div>
             </div>
-            <DailyOrderTable itemsPerPage={5} />
-          </div>
+            <DailyOrderTable
+              itemsPerPage={5}
+              startDate={formattedDate}
+              endDate={formattedDate}
+            />
+          </motion.div>
         </div>
 
-        <div className="w-2/6 min-h-40 flex flex-col gap-8">
-          <div className="w-full flex border rounded-lg p-6 flex-col gap-6">
+        <motion.div
+          className="w-2/6 min-h-40 flex flex-col gap-8"
+          variants={itemAnimation}
+        >
+          <div className="w-full flex border rounded-lg p-6 flex-col gap-6 shadow-sm">
             <h2 className="font-semibold">Add Item</h2>
             <form
               onSubmit={handleAddList}
@@ -173,7 +288,7 @@ const Inventory: React.FC = () => {
                     <Input
                       type="text"
                       {...dailyCostRegister("unit", {
-                        required: "Amountis required",
+                        required: "Unit is required",
                       })}
                       placeholder="Eg. unit/kg"
                     />
@@ -185,9 +300,9 @@ const Inventory: React.FC = () => {
                     <Input
                       type="number"
                       {...dailyCostRegister("price", {
-                        required: "price required",
+                        required: "Price required",
                       })}
-                      placeholder="price"
+                      placeholder="Enter price"
                     />
                   </div>
                   <div className="w-full flex flex-col gap-2 items-start justify-start">
@@ -197,7 +312,7 @@ const Inventory: React.FC = () => {
                     <Input
                       type="number"
                       {...dailyCostRegister("quantity", {
-                        required: "Cost is required",
+                        required: "Quantity is required",
                       })}
                       placeholder="Enter quantity"
                     />
@@ -217,16 +332,10 @@ const Inventory: React.FC = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-3 w-full justify-start mt-1">
-                {/* <Button
-                  onClick={() => navigate("/dashboard/menu")}
-                  className="text-black bg-white border min-w-[7rem] border-gray-600 hover:border-green-600"
-                >
-                  Cancel
-                </Button> */}
                 <Button
                   onClick={handleSubmit}
                   disabled={createDailyCostLoading}
-                  className="bg-secondary text-white min-w-[7rem] flex items-center justify-center hover:text-black hover:border-green-600"
+                  className="bg-secondary text-white min-w-[7rem] flex items-center justify-center hover:bg-secondary/90"
                 >
                   {createDailyCostLoading ? (
                     <Loader className="animate-spin" />
@@ -237,37 +346,51 @@ const Inventory: React.FC = () => {
               </div>
             </form>
           </div>
-          <div className="w-full border rounded-lg p-6 flex flex-col gap-5">
+          <div className="w-full border rounded-lg p-6 flex flex-col gap-5 shadow-sm">
             <h2 className="font-semibold">Daily Bought Items</h2>
-            {dailyBuyList.map((list) => (
-              <div className="w-full min-h-14 p-4 rounded-lg border flex flex-row items-center justify-between bg-slate-100 shadow-sm">
-                <span className="font-semibold">{list.name}</span>
-                <span className="text-muted-foreground text-sm">
-                  {list.amount}
-                </span>
-                <span className="text-muted-foreground text-sm">
-                  {list.cost.toLocaleString()} MMK
-                </span>
-                <span
-                  onClick={() => removeDailyList(list.id)}
-                  className="text-red-700 text-sm hover:cursor-pointer"
-                >
-                  Remove
-                </span>
+            {dailyBuyList.length === 0 ? (
+              <div className="w-full p-6 flex items-center justify-center">
+                <p className="text-gray-400">No items added yet</p>
               </div>
-            ))}
+            ) : (
+              dailyBuyList.map((list) => (
+                <motion.div
+                  key={list.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="w-full min-h-14 p-4 rounded-lg border flex flex-row items-center justify-between bg-slate-100 shadow-sm hover:bg-slate-200 transition-colors"
+                >
+                  <span className="font-semibold">{list.name}</span>
+                  <span className="text-muted-foreground text-sm">
+                    {list.amount}
+                  </span>
+                  <span className="text-muted-foreground text-sm">
+                    {list.cost.toLocaleString()} MMK
+                  </span>
+                  <span
+                    onClick={() => removeDailyList(list.id)}
+                    className="text-red-500 text-sm hover:cursor-pointer hover:text-red-700 transition-colors"
+                  >
+                    Remove
+                  </span>
+                </motion.div>
+              ))
+            )}
 
             <Button
-              disabled={createDailyCostLoading}
-              className="bg-secondary text-white min-w-[7rem] flex items-center mt-2 justify-center hover:text-black hover:border-green-600"
+              disabled={isLoading || dailyBuyList.length === 0}
+              className="bg-secondary text-white min-w-[7rem] flex items-center mt-2 justify-center hover:bg-secondary/90 disabled:opacity-50"
               onClick={handleCreateDailybuying}
             >
               {isLoading ? <Loader className="animate-spin" /> : "Save"}
             </Button>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
-export default Inventory;
+
+// Memoize the entire component
+export default React.memo(Inventory);
