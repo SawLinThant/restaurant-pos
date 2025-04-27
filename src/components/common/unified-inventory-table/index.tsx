@@ -187,51 +187,12 @@ const UnifiedInventoryTable: React.FC<UnifiedInventoryTableProps> = ({
           transition={{ delay: 0 }}
         >
           <Card className="overflow-hidden">
-            <CardHeader className="bg-blue-50 dark:bg-blue-900/20 pb-2">
-              <CardTitle className="text-lg flex items-center">
-                <span className="rounded-full bg-blue-100 p-2 mr-2">
-                  <TrendingUp className="h-5 w-5 text-blue-600" />
-                </span>
-                Daily Sales (Demand)
-              </CardTitle>
-              <CardDescription>
-                Total revenue for {format(new Date(date), "MMM dd, yyyy")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="text-3xl font-bold flex items-baseline">
-                {isOrderLoading ? (
-                  <Skeleton className="h-9 w-32 rounded-md" />
-                ) : (
-                  <>
-                    {totalOrderAmount.toLocaleString()}{" "}
-                    <span className="text-sm ml-1">MMK</span>
-                  </>
-                )}
-              </div>
-              <div className="mt-4 flex items-center text-sm">
-                <span className="flex items-center text-emerald-500 font-medium">
-                  <ArrowUp className="mr-1 h-4 w-4" />
-                  {totalOrders} Orders
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          variants={cardVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.1 }}
-        >
-          <Card>
             <CardHeader className="bg-amber-50 dark:bg-amber-900/20 pb-2">
               <CardTitle className="text-lg flex items-center">
                 <span className="rounded-full bg-amber-100 p-2 mr-2">
                   <ArrowDown className="h-5 w-5 text-amber-600" />
                 </span>
-                Daily Expenses (Supply)
+                Daily Expenses (Demand)
               </CardTitle>
               <CardDescription>
                 Total cost for {format(new Date(date), "MMM dd, yyyy")}
@@ -262,57 +223,117 @@ const UnifiedInventoryTable: React.FC<UnifiedInventoryTableProps> = ({
           variants={cardVariants}
           initial="hidden"
           animate="visible"
+          transition={{ delay: 0.1 }}
+        >
+          <Card>
+            <CardHeader className="bg-blue-50 dark:bg-blue-900/20 pb-2">
+              <CardTitle className="text-lg flex items-center">
+                <span className="rounded-full bg-blue-100 p-2 mr-2">
+                  <TrendingUp className="h-5 w-5 text-blue-600" />
+                </span>
+                Daily Sales (Supply)
+              </CardTitle>
+              <CardDescription>
+                Total revenue for {format(new Date(date), "MMM dd, yyyy")}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="text-3xl font-bold flex items-baseline">
+                {isOrderLoading ? (
+                  <Skeleton className="h-9 w-32 rounded-md" />
+                ) : (
+                  <>
+                    {totalOrderAmount.toLocaleString()}{" "}
+                    <span className="text-sm ml-1">MMK</span>
+                  </>
+                )}
+              </div>
+              <div className="mt-4 flex items-center text-sm">
+                <span className="flex items-center text-emerald-500 font-medium">
+                  <ArrowUp className="mr-1 h-4 w-4" />
+                  {totalOrders} Orders
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+        {/* Profit/Loss Card */}
+        <motion.div
+          variants={cardVariants}
+          initial="hidden"
+          animate="visible"
           transition={{ delay: 0.2 }}
         >
           <Card>
-            <CardHeader
-              className={`${
-                profitLoss >= 0
-                  ? "bg-green-50 dark:bg-green-900/20"
-                  : "bg-red-50 dark:bg-red-900/20"
-              } pb-2`}
-            >
-              <CardTitle className="text-lg flex items-center">
-                <span
-                  className={`rounded-full ${
-                    profitLoss >= 0 ? "bg-green-100" : "bg-red-100"
-                  } p-2 mr-2`}
-                >
-                  {profitLoss >= 0 ? (
+            <CardHeader className="pb-2 bg-gradient-to-r from-green-50 to-red-50">
+              <CardTitle className="text-lg flex items-center justify-between">
+                <div className="flex items-center">
+                  <span className="rounded-full bg-green-100 p-2 mr-2">
                     <TrendingUp className="h-5 w-5 text-green-600" />
-                  ) : (
-                    <TrendingDown className="h-5 w-5 text-red-600" />
-                  )}
-                </span>
-                {profitLoss >= 0 ? "Profit" : "Loss"}
+                  </span>
+                  <span>Profit/Loss</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant={profitLoss >= 0 ? "success" : "destructive"}>
+                    {profitLoss >= 0 ? "Profitable" : "Loss"}
+                  </Badge>
+                </div>
               </CardTitle>
               <CardDescription>
                 Profit margin: {profitMargin.toFixed(2)}%
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
-              <div
-                className={`text-3xl font-bold flex items-baseline ${
-                  profitLoss >= 0 ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {isOrderLoading || isSupplyLoading ? (
-                  <Skeleton className="h-9 w-32 rounded-md" />
-                ) : (
-                  <>
-                    {Math.abs(profitLoss).toLocaleString()}{" "}
-                    <span className="text-sm ml-1">MMK</span>
-                  </>
-                )}
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <div className={`text-2xl font-semibold text-green-600`}>
+                    {isOrderLoading || isSupplyLoading ? (
+                      <Skeleton className="h-7 w-24 rounded-md" />
+                    ) : (
+                      <>
+                        +{profitLoss >= 0 ? profitLoss.toLocaleString() : 0}{" "}
+                        <span className="text-xs">MMK</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={`text-2xl font-semibold text-red-600`}>
+                    {isOrderLoading || isSupplyLoading ? (
+                      <Skeleton className="h-7 w-24 rounded-md" />
+                    ) : (
+                      <>
+                        -
+                        {profitLoss < 0
+                          ? Math.abs(profitLoss).toLocaleString()
+                          : 0}{" "}
+                        <span className="text-xs">MMK</span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
               <div className="mt-4">
-                <Progress
-                  value={Math.max(
-                    0,
-                    Math.min(100, profitLoss >= 0 ? profitMargin : 0)
-                  )}
-                  className="h-2"
-                />
+                <div className="w-full flex h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-2.5 bg-green-600"
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        Math.max(0, profitLoss >= 0 ? profitMargin : 0)
+                      )}%`,
+                    }}
+                  />
+                  <div
+                    className="h-2.5 bg-red-600"
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        Math.max(0, profitLoss < 0 ? Math.abs(profitMargin) : 0)
+                      )}%`,
+                    }}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -328,8 +349,8 @@ const UnifiedInventoryTable: React.FC<UnifiedInventoryTableProps> = ({
         <div className="flex justify-between items-center">
           <TabsList className="grid grid-cols-3 w-[300px]">
             <TabsTrigger value="both">Both</TabsTrigger>
-            <TabsTrigger value="demand">Demand</TabsTrigger>
             <TabsTrigger value="supply">Supply</TabsTrigger>
+            <TabsTrigger value="demand">Demand</TabsTrigger>
           </TabsList>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="flex items-center">
@@ -353,13 +374,76 @@ const UnifiedInventoryTable: React.FC<UnifiedInventoryTableProps> = ({
             </CardHeader>
             <CardContent className="pt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Demand (Order) Table */}
+                {/* Demand (Daily Buying) Table */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-2 flex items-center">
+                    <span className="inline-flex items-center justify-center w-6 h-6 mr-2 rounded-full bg-amber-100 text-amber-600">
+                      D
+                    </span>
+                    Demand (Expenses)
+                  </h3>
+                  <div className="rounded-md border">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-amber-50">
+                          <TableHead>Particular</TableHead>
+                          <TableHead>Quantity</TableHead>
+                          <TableHead className="text-right">Amount</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {isSupplyLoading ? (
+                          Array(5)
+                            .fill(null)
+                            .map((_, index) => (
+                              <TableRow key={`supply-skeleton-${index}`}>
+                                <TableCell>
+                                  <Skeleton className="h-5 w-28" />
+                                </TableCell>
+                                <TableCell>
+                                  <Skeleton className="h-5 w-16" />
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  <Skeleton className="h-5 w-20 ml-auto" />
+                                </TableCell>
+                              </TableRow>
+                            ))
+                        ) : supplies.length > 0 ? (
+                          supplies.slice(0, itemsPerPage).map((supply) => (
+                            <TableRow key={supply.Id}>
+                              <TableCell className="font-medium">
+                                {supply.particular}
+                              </TableCell>
+                              <TableCell>
+                                {supply.quantity} {supply.unit}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                {supply.Amount.toLocaleString()} MMK
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell
+                              colSpan={3}
+                              className="text-center py-6 text-muted-foreground"
+                            >
+                              No supplies found for this date
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+
+                {/* Supply (Order) Table */}
                 <div>
                   <h3 className="text-lg font-semibold mb-2 flex items-center">
                     <span className="inline-flex items-center justify-center w-6 h-6 mr-2 rounded-full bg-blue-100 text-blue-600">
-                      D
+                      S
                     </span>
-                    Demand (Sales)
+                    Supply (Sales)
                   </h3>
                   <div className="rounded-md border">
                     <Table>
@@ -422,69 +506,6 @@ const UnifiedInventoryTable: React.FC<UnifiedInventoryTableProps> = ({
                     </Table>
                   </div>
                 </div>
-
-                {/* Supply Table */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-2 flex items-center">
-                    <span className="inline-flex items-center justify-center w-6 h-6 mr-2 rounded-full bg-amber-100 text-amber-600">
-                      S
-                    </span>
-                    Supply (Expenses)
-                  </h3>
-                  <div className="rounded-md border">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="bg-amber-50">
-                          <TableHead>Particular</TableHead>
-                          <TableHead>Quantity</TableHead>
-                          <TableHead className="text-right">Amount</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {isSupplyLoading ? (
-                          Array(5)
-                            .fill(null)
-                            .map((_, index) => (
-                              <TableRow key={`supply-skeleton-${index}`}>
-                                <TableCell>
-                                  <Skeleton className="h-5 w-28" />
-                                </TableCell>
-                                <TableCell>
-                                  <Skeleton className="h-5 w-16" />
-                                </TableCell>
-                                <TableCell className="text-right">
-                                  <Skeleton className="h-5 w-20 ml-auto" />
-                                </TableCell>
-                              </TableRow>
-                            ))
-                        ) : supplies.length > 0 ? (
-                          supplies.slice(0, itemsPerPage).map((supply) => (
-                            <TableRow key={supply.Id}>
-                              <TableCell className="font-medium">
-                                {supply.particular}
-                              </TableCell>
-                              <TableCell>
-                                {supply.quantity} {supply.unit}
-                              </TableCell>
-                              <TableCell className="text-right">
-                                {supply.Amount.toLocaleString()} MMK
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        ) : (
-                          <TableRow>
-                            <TableCell
-                              colSpan={3}
-                              className="text-center py-6 text-muted-foreground"
-                            >
-                              No supplies found for this date
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </div>
               </div>
             </CardContent>
             <CardFooter className="flex justify-between pt-0">
@@ -522,10 +543,10 @@ const UnifiedInventoryTable: React.FC<UnifiedInventoryTableProps> = ({
           </Card>
         </TabsContent>
 
-        <TabsContent value="demand" className="mt-4">
+        <TabsContent value="supply" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Demand (Sales) Details</CardTitle>
+              <CardTitle>Supply (Sales) Details</CardTitle>
               <CardDescription>
                 All sales for {format(new Date(date), "MMM dd, yyyy")}
               </CardDescription>
@@ -647,10 +668,10 @@ const UnifiedInventoryTable: React.FC<UnifiedInventoryTableProps> = ({
           </Card>
         </TabsContent>
 
-        <TabsContent value="supply" className="mt-4">
+        <TabsContent value="demand" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Supply (Expenses) Details</CardTitle>
+              <CardTitle>Demand (Expenses) Details</CardTitle>
               <CardDescription>
                 All purchases for {format(new Date(date), "MMM dd, yyyy")}
               </CardDescription>
@@ -759,14 +780,8 @@ const UnifiedInventoryTable: React.FC<UnifiedInventoryTableProps> = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <Card
-          className={`${
-            profitLoss >= 0 ? "border-green-200" : "border-red-200"
-          }`}
-        >
-          <CardHeader
-            className={`pb-2 ${profitLoss >= 0 ? "bg-green-50" : "bg-red-50"}`}
-          >
+        <Card>
+          <CardHeader className="pb-2 bg-gradient-to-r from-blue-50 to-amber-50">
             <CardTitle className="text-lg">
               Financial Summary - {format(new Date(date), "MMMM d, yyyy")}
             </CardTitle>
@@ -798,16 +813,19 @@ const UnifiedInventoryTable: React.FC<UnifiedInventoryTableProps> = ({
               </div>
 
               <div className="flex flex-col">
-                <span className="text-sm text-muted-foreground">
-                  {profitLoss >= 0 ? "Profit" : "Loss"}
-                </span>
-                <span
-                  className={`text-2xl font-semibold ${
-                    profitLoss >= 0 ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  {Math.abs(profitLoss).toLocaleString()} MMK
-                </span>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Profit</span>
+                  <span className="text-sm text-muted-foreground">Loss</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xl font-semibold text-green-600">
+                    {profitLoss >= 0 ? profitLoss.toLocaleString() : 0} MMK
+                  </span>
+                  <span className="text-xl font-semibold text-red-600">
+                    {profitLoss < 0 ? Math.abs(profitLoss).toLocaleString() : 0}{" "}
+                    MMK
+                  </span>
+                </div>
                 <span className="text-sm text-muted-foreground mt-1">
                   Profit Margin: {profitMargin.toFixed(2)}%
                 </span>
@@ -816,25 +834,36 @@ const UnifiedInventoryTable: React.FC<UnifiedInventoryTableProps> = ({
 
             <div className="mt-6">
               <div className="text-sm font-medium mb-2">Profit/Loss Ratio</div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div className="w-full flex h-2.5">
                 <div
-                  className={`h-2.5 rounded-full ${
-                    profitLoss >= 0 ? "bg-green-600" : "bg-red-600"
-                  }`}
+                  className="h-2.5 rounded-l-full bg-green-600"
                   style={{
                     width: `${Math.min(
-                      100,
-                      Math.max(0, profitLoss >= 0 ? profitMargin * 2 : 0)
+                      50,
+                      Math.max(
+                        0,
+                        profitLoss >= 0 ? (profitMargin * 50) / 100 : 0
+                      )
+                    )}%`,
+                  }}
+                ></div>
+                <div
+                  className="h-2.5 rounded-r-full bg-red-600"
+                  style={{
+                    width: `${Math.min(
+                      50,
+                      Math.max(
+                        0,
+                        profitLoss < 0 ? (Math.abs(profitMargin) * 50) / 100 : 0
+                      )
                     )}%`,
                   }}
                 ></div>
               </div>
               <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-                <span>0%</span>
-                <span>25%</span>
-                <span>50%</span>
-                <span>75%</span>
-                <span>100%</span>
+                <span>Profit</span>
+                <span>Balance</span>
+                <span>Loss</span>
               </div>
             </div>
           </CardContent>
